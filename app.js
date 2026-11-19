@@ -1,126 +1,60 @@
-/* RLO1 | Arabic interactive learning unit — no remote services or personal-data collection */
 'use strict';
-const $ = (sel, root=document) => root.querySelector(sel);
-const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
-const arNum = n => new Intl.NumberFormat('ar-EG').format(n);
-const key = 'rlo1-agentic-ai-progress-v1';
-const screens = [
-  'مقدمة وتهيئة','من السؤال إلى المهمة','مفهوم الوكيل وخصائصه','آلية عمل الوكيل',
-  'المحادثة أم الوكيل؟','تطبيقات الوكلاء','تحليل وتصنيف حالات','تقويم ختامي وخلاصة'
-];
-const stages = [
-  {id:'goal', name:'تحديد الهدف', label:['تحديد','الهدف'], description:'يحدّد الوكيل النتيجة المرجوة والقيود التي ينبغي احترامها.', example:'تطلب نورة تقريرًا بثلاث وظائف مناسبة لمؤهلاتها، لا تقديم طلبات تلقائية.'},
-  {id:'analyse', name:'تحليل المهمة', label:['تحليل','المهمة'], description:'يفكّك الوكيل الهدف إلى متطلبات فرعية وما يلزمه من بيانات.', example:'يحتاج ملف مؤهلات، ومصادر وظائف موثوقة، ومعايير للمقارنة.'},
-  {id:'plan', name:'التخطيط', label:['وضع','الخطة'], description:'يحدّد ترتيب الخطوات وما يتطلب موافقة أو تحققًا.', example:'البحث أولًا، ثم استخراج الشروط، ثم المقارنة، ثم صياغة التقرير.'},
-  {id:'tools', name:'اختيار الأدوات', label:['اختيار','الأدوات'], description:'يختار المصادر والأدوات المسموح الوصول إليها ضمن الصلاحيات.', example:'استخدام قاعدة وظائف رسمية وملف مؤهلات منزوع البيانات الحساسة.'},
-  {id:'act', name:'التنفيذ', label:['تنفيذ','الخطوات'], description:'يجري خطوات الخطة باستخدام الأدوات المتاحة، ولا يكتفي بوصف ما يمكن فعله.', example:'يجمع الإعلانات ويستخرج الشروط ويقارنها بالمهارات الموثقة.'},
-  {id:'verify', name:'التحقق', label:['التحقق','والمراجعة'], description:'يفحص جودة النتائج ويكشف النواقص أو التناقضات.', example:'يميّز الإعلانات المنتهية ويشير إلى شروط لم يتأكد منها.'},
-  {id:'adapt', name:'التعديل عند الحاجة', label:['التعديل','عند الحاجة'], description:'قد يغيّر الخطة ويعيد خطوة سابقة إذا أظهرت المراجعة مشكلة.', example:'إذا تعذر الوصول إلى موقع، يختار مصدرًا بديلًا مسموحًا، أو يطلب مراجعة بشرية.'}
-];
-const features = [
-  {name:'التوجيه نحو هدف', icon:'◎', detail:'ينظّم النظام خطواته للوصول إلى نتيجة محددة، بدل الاكتفاء باستجابة لغوية مفتوحة.', example:'إعداد تقرير فرص مهنية وفق شروط تضعها الخريجة.'},
-  {name:'التخطيط', icon:'☷', detail:'يمكن أن يقسم المهمة إلى خطوات مترابطة، ويعيد ترتيبها إذا ظهرت معلومات جديدة.', example:'البحث، ثم استخراج المتطلبات، ثم المقارنة.'},
-  {name:'استخدام الأدوات', icon:'⌘', detail:'يستعين بوسائل متاحة ومصرّح بها للبحث أو قراءة ملفات أو تنفيذ إجراءات.', example:'قراءة إعلان وظيفة عبر مصدر موثوق واستخراج متطلباته.'},
-  {name:'تنفيذ المهام', icon:'➜', detail:'ينفّذ خطوات عملية ضمن نطاقه وصلاحياته؛ ولا يشترط أن يقوم بجميع الإجراءات الخارجية.', example:'بناء تقرير مواءمة اعتمادًا على مصادر وبيانات حقيقية.'},
-  {name:'التفاعل مع البيئة', icon:'◈', detail:'يستقبل معلومات جديدة من المستخدم أو الملفات أو نتائج الأدوات ويستخدمها لتحديد التالي.', example:'تعديل المقارنة بعد ظهور شرط خبرة جديد.'},
-  {name:'مراجعة النتائج والتكيف', icon:'↺', detail:'يفحص نتائج خطواته، ويكشف النواقص، وقد يعيد التخطيط أو يطلب توضيحًا.', example:'الإبلاغ عن إعلان منتهي والبحث في مصدر بديل.'},
-  {name:'الإشراف البشري', icon:'♙', detail:'تظل القرارات الحساسة والإجراءات الخارجية المهمة خاضعة للمراجعة والموافقة البشرية.', example:'تطلب موافقة نورة قبل إرسال سيرتها الذاتية لأي جهة.'}
-];
-const apps = {
-  jobs:{title:'وكيل البحث الوظيفي', goal:'جمع فرص مناسبة قابلة للمراجعة.', inputs:'التخصص، المدينة المرغوبة، مستوى الخبرة.', tools:'مصادر وظائف يُسمح بالبحث فيها.', outputs:'قائمة فرص مؤرخة مع روابطها.', risks:'إعلانات غير محدثة، أو منصات تمنع الوصول الآلي.'},
-  match:{title:'وكيل المواءمة الوظيفية', goal:'تحديد توافق المهارات مع شروط وظيفة.', inputs:'ملف مؤهلات مختصر وإعلان وظيفة.', tools:'استخراج النصوص، وتحليل المتطلبات، والمقارنة.', outputs:'جدول أدلة توافق وفجوات مهارات.', risks:'استنتاج مهارة غير مثبتة أو المبالغة في نسبة التوافق.'},
-  interview:{title:'وكيل التدريب على المقابلات', goal:'تدريب الخريجة على تقديم إجابات مهنية.', inputs:'وصف وظيفة ومستوى الخبرة المطلوب.', tools:'محاكاة أسئلة وتغذية راجعة وفق معايير.', outputs:'جلسة تدريب وملاحظات تحسين.', risks:'أسئلة متحيزة، أو ملاحظات تحتاج تحققًا بشريًا.'},
-  learn:{title:'وكيل دعم التعلم والتطوير', goal:'اقتراح خطوات لسد فجوة مهارية.', inputs:'المهارة المستهدفة والوقت والموارد.', tools:'مصادر تعلم متاحة وخطة متابعة.', outputs:'خطة تعلم قابلة للمراجعة ومؤشرات تقدم.', risks:'مصادر قديمة أو خطط لا تراعي ظروف المتعلمة.'}
-};
-const cases = [
- {id:'c1', name:'الحالة الأولى', body:'تسأل خريجة أداة محادثة عن مهارات مصمم التعليم؛ فتكتب قائمة عامة دون استخدام ملفات أو أدوات خارجية.', type:'chat', why:'المعطى هو توليد نص فقط، ولا يظهر تنفيذ خطوات خارج المحادثة.'},
- {id:'c2', name:'الحالة الثانية', body:'يحصل النظام بإذن المستخدم على بيانات مؤهلاته، يبحث في مواقع مسموحة، ويستخرج شروط الوظائف، ثم يجمع تقريرًا موثقًا.', type:'agent', why:'وردت أدلة واضحة على استخدام الأدوات وتنفيذ خطوات متعددة للوصول إلى هدف.'},
- {id:'c3', name:'الحالة الثالثة', body:'تعلن خدمة باسم «الوكيل الخارق» أنها تحلل السيرة الذاتية بذكاء، لكن الوصف لا يذكر أدواتها أو إجراءاتها.', type:'unknown', why:'الاسم أو الوصف التسويقي لا يكشف القدرات الفعلية أو طريقة التنفيذ.'},
- {id:'c4', name:'الحالة الرابعة', body:'يستخدم النظام تقويمًا متصلًا بإذن المستخدم، يقترح مواعيد مقابلات تدريبية، ثم ينشئ مواعيد بعد التأكيد.', type:'agent', why:'استخدام أداة تقويم وإتمام فعل مشروط بالموافقة دليل سلوك وكيلي.'},
- {id:'c5', name:'الحالة الخامسة', body:'تطلب المستخدمة صياغة رسالة التقديم؛ فتكتب الأداة نص الرسالة وتترك النسخ والإرسال لها.', type:'chat', why:'صياغة الرسالة استجابة لغوية؛ لا يوجد دليل على تنفيذ الإرسال.'},
- {id:'c6', name:'الحالة السادسة', body:'تقول صفحة منتج إنه «يمكنه إرسال رسائل تلقائيًا»، لكنها لا توضح وجود تكاملات أو صلاحيات أو ما يحدث عمليًا.', type:'unknown', why:'الادعاء وحده غير كاف؛ نحتاج دليلًا على الأدوات والصلاحيات والتنفيذ.'}
-];
-const categoryLabel = {chat:'استجابة داخل المحادثة',agent:'سلوك وكيلي',unknown:'أدلة غير كافية'};
-const defaultState = () => ({visited:Array(8).fill(false),done:Array(8).fill(false),introChoice:'',videoWatched:false,videoChoice:'',featureSeen:[],order:['tools','verify','goal','act','plan','adapt','analyse'],orderPassed:false,comparisonPassed:false,appsSeen:[],classifications:{},classReason:'',classPassed:false,finalPassed:false});
-let state = defaultState();
-try {const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved&&Array.isArray(saved.done)&&saved.done.length===8&&Array.isArray(saved.visited)&&saved.visited.length===8){state={...defaultState(),...saved}}}catch(e){/* local file privacy can block storage */}
-const store = () => {try {localStorage.setItem(key,JSON.stringify(state))}catch(e){/* continue within session */}};
-const showFeedback=(id,cls,title,detail)=>{const el=$('#'+id); if(!el)return;el.hidden=false;el.className='feedback '+(cls||'');el.innerHTML=`<strong>${title}</strong>${detail}`};
-const announce=message=>{const el=$('#announcer');el.textContent='';requestAnimationFrame(()=>{el.textContent=message})};
-let current=1;
-function statusLabel(i){return state.done[i-1]?'مكتملة':state.visited[i-1]?'قيد التعلم':'لم تبدأ'}
-function updateNav(){const nav=$('#screenNav');nav.innerHTML=screens.map((title,i)=>`<button type="button" class="nav-item ${current===i+1?'active':''} ${state.done[i]?'complete':''}" data-goto="${i+1}" ${current===i+1?'aria-current="step"':''} aria-label="الشاشة ${i+1}: ${title}، ${statusLabel(i+1)}"><span class="nav-index">${arNum(i+1).padStart(2,'٠')}</span><span class="nav-name">${title}</span><span class="nav-status" aria-hidden="true">${state.done[i]?'✓':state.visited[i]?'•':'○'}</span></button>`).join('');
- $$('[data-goto]',nav).forEach(btn=>btn.addEventListener('click',()=>navigate(+btn.dataset.goto)));
- const count=state.done.filter(Boolean).length;$('#progressNumber').textContent=`${arNum(Math.round(count/8*100))}٪`;$('#progressBar').style.width=(count/8*100)+'%';$('#progressHint').textContent=`${arNum(count)} شاشات مكتملة من ${arNum(8)}؛ الزيارة لا تعني الإتقان`;
- $('#currentStatus').textContent=statusLabel(current);$('#screenPosition').textContent=`الشاشة ${arNum(current)} من ${arNum(8)}`;
- $('#prevScreen').disabled=current===1;$('#nextScreen').disabled=current===8;$('#nextScreen').textContent=current===8?'نهاية الوحدة':'التالي ←';
+(()=>{
+const names=['intro','description','outcomes','guidelines'];
+const key='ai-career-introduction-v1';
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const digits=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[Number(d)]);
+let data={viewed:[],completed:[],videoEnded:false,stations:[],outcomes:[],rules:[],ready:false};
+try{const parsed=JSON.parse(localStorage.getItem(key)||'null');if(parsed&&typeof parsed==='object')data={...data,...parsed}}catch(e){console.warn('تعذر استعادة التقدم المخزن.');}
+const save=()=>{try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('تعذر حفظ التقدم في هذا المتصفح.')}};
+const add=(field,value)=>{if(!data[field].includes(value))data[field].push(value);save()};
+const has=(field,value)=>data[field].includes(value);
+const valid=s=>names.includes(s)?s:'intro';
+function progress(){
+  data.completed=[];
+  if(data.videoEnded)data.completed.push('intro');
+  if(data.stations.length===4)data.completed.push('description');
+  if(data.outcomes.length===4)data.completed.push('outcomes');
+  if(data.rules.length===8&&data.ready)data.completed.push('guidelines');
+  const pct=Math.round(data.completed.length/4*100);
+  $('#percent').textContent=digits(pct)+'٪';$('#progressFill').style.width=pct+'%';
+  $('#progressBar').setAttribute('aria-valuenow',String(pct));
+  names.forEach(n=>{const el=document.querySelector('[data-check="'+n+'"]');el.textContent=data.completed.includes(n)?'✓':has('viewed',n)?'•':'○';el.setAttribute('aria-label',data.completed.includes(n)?'مكتمل':has('viewed',n)?'تمت الزيارة':'لم يُزر')});
+  save();
 }
-function markDone(i){if(!state.done[i-1]){state.done[i-1]=true;store();updateNav();announce(`أكملتِ الشاشة ${arNum(i)}. أحسنتِ.`)}}
-function navigate(i,{replace=false}={}){i=Math.max(1,Math.min(8,Number(i)||1));current=i;$$('.screen').forEach(section=>section.hidden=+section.dataset.screen!==i);state.visited[i-1]=true;store();updateNav();if(replace){history.replaceState(null,'',`#screen-${i}`)}else if(location.hash!==`#screen-${i}`){location.hash=`screen-${i}`};document.getElementById('main').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});closeSidebar();}
-function goFromHash(){const match=/^#screen-([1-8])$/.exec(location.hash);navigate(match?+match[1]:1,{replace:!match});}
-function closeSidebar(){$('#sidebar').classList.remove('open');$('#shade').hidden=true;$('#openNav').setAttribute('aria-expanded','false')}
-$('#openNav').addEventListener('click',()=>{$('#sidebar').classList.add('open');$('#shade').hidden=false;$('#openNav').setAttribute('aria-expanded','true')});$('#closeNav').addEventListener('click',closeSidebar);$('#shade').addEventListener('click',closeSidebar);document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSidebar()});
-$('#prevScreen').addEventListener('click',()=>navigate(current-1));$('#nextScreen').addEventListener('click',()=>navigate(current+1));window.addEventListener('hashchange',goFromHash);
-$('#resetProgress').addEventListener('click',()=>{if(confirm('هل تريدين حذف تقدّم التعلم وإجاباتك المحفوظة على هذا الجهاز؟')){state=defaultState();store();location.hash='#screen-1';location.reload()}});
-/* Screen 1 */
-$('#introSubmit').addEventListener('click',()=>{const c=$('input[name="introChoice"]:checked');if(!c){showFeedback('introFeedback','warn','اختاري إجابة أولًا','فكرة السؤال هي توقّع ما الذي يستطيع النظام فعله، وليس حفظ مصطلح.');return}state.introChoice=c.value;store();const f={a:['توقّع جزئي','قد يقدم النظام معلومات فقط، لكن الوكيل الذي يمتلك أدوات وصلاحيات يستطيع تنفيذ خطوات تتجاوز الإجابة.'],b:['توقّع مدعوم بالأدلة','صحيح. إذا توفرت الأدوات والتصاريح، يمكن للنظام تنفيذ سلسلة من الخطوات نحو هدف، مع مراجعة النتائج.'],c:['نحتاج إشرافًا بشريًا','لا يمكن ضمان التوظيف؛ إذ تبقى القرارات والتواصل الخارجي والبيانات الحساسة تحت إشراف المستخدم.']}[c.value];showFeedback('introFeedback',c.value==='b'?'':'warn',f[0],f[1]+'<br><b>الخطوة التالية: اكتشفي كيف يحدث ذلك عمليًا.</b>');markDone(1)});
-/* Screen 2 */
-const v=$('#lessonVideo');v.addEventListener('ended',()=>{state.videoWatched=true;store();$('#videoWatchHint').textContent='تمت مشاهدة المقطع التجريبي. يمكنك الآن الإجابة عن سؤال التحليل.'});if(state.videoWatched)$('#videoWatchHint').textContent='سبق أن شاهدت المقطع التجريبي. يمكنك الإجابة عن سؤال التحليل.';
-$('#videoSubmit').addEventListener('click',()=>{const choice=$('input[name="videoChoice"]:checked');if(!choice){showFeedback('videoFeedback','warn','اختاري إجابة','أي حالة تصف تنفيذ خطوات باستخدام أدوات؟');return}if(!state.videoWatched){showFeedback('videoFeedback','warn','أكملي المشاهدة أولًا','انتظري حتى نهاية المقطع القصير قبل اعتماد السؤال.');return}state.videoChoice=choice.value;store();if(choice.value==='b'){showFeedback('videoFeedback','','تحليل صحيح','دليل السلوك الوكيلي هنا هو البحث عبر أدوات، واستخراج الشروط، والمقارنة، مع مراجعة النتائج والقيود.');markDone(2)}else{showFeedback('videoFeedback','warn','راجعي الفرق','تقديم تعريف أو كلمات مفتاحية مساعدة لا يثبت أن النظام استخدم أداة أو نفّذ سلسلة إجراءات. حاولي من جديد.')}});
-/* Screen 3 */
-function renderFeatures(){const el=$('#featureGrid');el.innerHTML=features.map((f,i)=>{const seen=state.featureSeen.includes(i);return `<article class="feature-card ${seen?'revealed':''}" data-feature="${i}"><button type="button" class="feature-button" aria-label="${f.name}. ${seen?'إخفاء':'اكشفي'} الشرح" aria-expanded="${seen}"><span class="feature-inner"><span class="feature-face front"><span class="feature-number">خاصية ${arNum(i+1)}</span><span class="feature-icon" aria-hidden="true">${f.icon}</span><strong>${f.name}</strong><small>اضغطي لاكتشاف المثال ←</small></span><span class="feature-face back"><span class="feature-number">مثال مهني</span><p>${f.detail}</p><strong>${f.example}</strong><small>اضغطي للعودة</small></span></span></button></article>`}).join('');$$('.feature-button',el).forEach(btn=>btn.addEventListener('click',()=>{let i=+btn.closest('.feature-card').dataset.feature;if(!state.featureSeen.includes(i))state.featureSeen.push(i);store();btn.closest('.feature-card').classList.toggle('revealed');btn.setAttribute('aria-expanded',btn.closest('.feature-card').classList.contains('revealed'));btn.setAttribute('aria-label',`${features[i].name}، ${btn.closest('.feature-card').classList.contains('revealed')?'إخفاء':'اكشفي'} الشرح`);$('#cardsCount').textContent=`${arNum(state.featureSeen.length)} من ${arNum(7)}`;if(state.featureSeen.length===7){showFeedback('cardsFeedback','','استكشفتِ الخصائص السبع','تذكري أن امتلاك خاصية ما يعتمد على بنية النظام وصلاحياته؛ وليس على تسميته التجارية.');markDone(3)}}));$('#cardsCount').textContent=`${arNum(state.featureSeen.length)} من ${arNum(7)}`;}
-renderFeatures();
-/* Screen 4: SVG exploration */
-let activeStage=0;const SVGNS='http://www.w3.org/2000/svg';const makeSvg=(t,attrs)=>{const el=document.createElementNS(SVGNS,t);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);return el};
-function activateStage(i){activeStage=i;$$('.flow-node').forEach((n,index)=>n.classList.toggle('active',index===i));const activeLine=$('#activeFlowPath');if(activeLine){const len=activeLine.getTotalLength();activeLine.style.strokeDasharray=`${(i+1)/7*len} ${len}`;activeLine.style.strokeDashoffset='0'}const st=stages[i];$('#flowExplainer').innerHTML=`<div class="flow-round">${arNum(i+1)}</div><div><span class="mini-label">مرحلة من دورة الوكيل</span><h3>${st.name}</h3><p>${st.description}</p><small>مثال نورة: ${st.example}</small></div>`}
-function buildSvg(){const root=$('#flowNodes');const positions=[[782,80],[578,80],[374,80],[170,80],[170,232],[374,232],[578,232]];stages.forEach((s,i)=>{const [x,y]=positions[i];const g=makeSvg('g',{class:'flow-node',role:'button',tabindex:'0','aria-label':`المرحلة ${i+1}: ${s.name}`,transform:`translate(${x},${y})`});g.appendChild(makeSvg('rect',{x:-78,y:-38,width:156,height:76,rx:15}));const icon=makeSvg('text',{x:0,y:-6,class:'flow-small'});icon.textContent=`${arNum(i+1)} / ${arNum(7)}`;g.appendChild(icon);s.label.forEach((word,j)=>{const text=makeSvg('text',{x:0,y:16+(j*17)});text.textContent=word;g.appendChild(text)});g.addEventListener('click',()=>activateStage(i));g.addEventListener('keydown',ev=>{if(['Enter',' '].includes(ev.key)){ev.preventDefault();activateStage(i)}});root.appendChild(g)});activateStage(0)}
-buildSvg();
-function renderOrder(){const list=$('#orderList');list.innerHTML=state.order.map((id,index)=>`<li class="order-row" data-order="${id}"><span class="position">${arNum(index+1)}</span><span class="stage-label">${stages.find(x=>x.id===id).name}</span><span class="order-controls"><button class="tiny-btn" data-move="up" data-index="${index}" ${index===0?'disabled':''} aria-label="تحريك ${stages.find(x=>x.id===id).name} للأعلى">↑</button><button class="tiny-btn" data-move="down" data-index="${index}" ${index===state.order.length-1?'disabled':''} aria-label="تحريك ${stages.find(x=>x.id===id).name} للأسفل">↓</button></span></li>`).join('');$$('[data-move]',list).forEach(btn=>btn.addEventListener('click',()=>{let i=+btn.dataset.index,j=i+(btn.dataset.move==='up'?-1:1);[state.order[i],state.order[j]]=[state.order[j],state.order[i]];store();renderOrder()}));const correct=state.order.reduce((n,s,i)=>n+(s===stages[i].id?1:0),0);$('#orderCount').textContent=`${arNum(correct)} / ${arNum(7)}`}
-renderOrder();$('#orderCheck').addEventListener('click',()=>{const n=state.order.reduce((acc,id,i)=>acc+(id===stages[i].id?1:0),0);if(n===7){state.orderPassed=true;store();showFeedback('orderFeedback','','ترتيب مدعوم بالأدلة','رتّبتِ المراحل الأساسية. في الواقع قد يعود الوكيل من التحقق إلى التخطيط أو استخدام الأدوات، وفق الحاجة.');markDone(4)}else{showFeedback('orderFeedback','warn',`${arNum(n)} مراحل في مواضعها الصحيحة`,'راجعي ترتيب الهدف ثم تحليل المهمة ثم التخطيط ثم اختيار الأدوات والتنفيذ والتحقق والتعديل. يمكنك استخدام السهمين لتصحيح ترتيب كل خطوة.')}});
-$('#orderRetry').addEventListener('click',()=>{let copy=stages.map(s=>s.id);for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}state.order=copy;store();renderOrder();$('#orderFeedback').hidden=true});
-/* Screen 5 */
-$('#compareSubmit').addEventListener('click',()=>{const picked=$$('#compareChoices input:checked').map(c=>c.value);const expected=['tools','steps','verify'];const correct=expected.every(x=>picked.includes(x))&&picked.length===3;if(correct){showFeedback('compareFeedback','','تحليل دقيق','الميزة ليست اسم الأداة: الأدلة هي الوصول إلى أدوات ملائمة، وتتابع الإجراءات، والمقارنة المستندة إلى البيانات، مع الإفصاح عن القيود.');state.comparisonPassed=true;store();markDone(5)}else{showFeedback('compareFeedback','warn','ما زالت بعض الأدلة تحتاج مراجعة','لا يعد اسم العلامة التجارية دليلًا. ابحثي عن قدرة فعلية مثبتة على الوصول إلى مصادر واتباع خطوات ومراجعة النتائج.')}});
-/* Screen 6 */
-function showApp(id){const a=apps[id];if(!a)return;if(!state.appsSeen.includes(id))state.appsSeen.push(id);store();$$('.hotspot').forEach(el=>el.setAttribute('aria-pressed',el.dataset.app===id?'true':'false'));$('#applicationDetail').innerHTML=`<span class="mini-label">تطبيق مهني استكشافي</span><h2>${a.title}</h2><dl><div><dt>الهدف</dt><dd>${a.goal}</dd></div><div><dt>المدخلات</dt><dd>${a.inputs}</dd></div><div><dt>الأدوات</dt><dd>${a.tools}</dd></div><div><dt>المخرجات</dt><dd>${a.outputs}</dd></div><div><dt>الحدود والمخاطر</dt><dd>${a.risks}</dd></div></dl><div class="application-foot"><span>${arNum(state.appsSeen.length)} من ${arNum(4)}</span> تطبيقات تم استكشافها</div>`;if(state.appsSeen.length===4){showFeedback('appsFeedback','','اكتمل استكشاف التطبيقات','لكل وكيل هدف ومدخلات وأدوات ومخرجات، لكن يجب فهم القيود قبل الاعتماد على نتائجه.');markDone(6)}}
-$$('.hotspot').forEach(btn=>btn.addEventListener('click',()=>showApp(btn.dataset.app)));
-/* Screen 7: mouse, touch, and keyboard-accessible classification */
-
-let touchGhost=null, touchCardId=null;
-function setupTouchDrag(card){
- const clean=()=>{touchCardId=null;card.classList.remove('touch-dragging');$$('.dropzone').forEach(z=>z.classList.remove('drag-over'));if(touchGhost){touchGhost.remove();touchGhost=null}};
- card.addEventListener('touchstart',event=>{
-   if(event.target.closest('select,button,a,input'))return;
-   touchCardId=card.dataset.case;card.classList.add('touch-dragging');
-   touchGhost=document.createElement('div');touchGhost.className='touch-ghost';touchGhost.textContent=cases.find(c=>c.id===touchCardId).name;document.body.appendChild(touchGhost);
-   const t=event.touches[0];touchGhost.style.left=t.clientX+'px';touchGhost.style.top=t.clientY+'px';
- },{passive:true});
- card.addEventListener('touchmove',event=>{
-  if(!touchCardId)return;event.preventDefault();const t=event.touches[0];
-  touchGhost.style.left=t.clientX+'px';touchGhost.style.top=t.clientY+'px';
-  if(t.clientY>window.innerHeight-65)window.scrollBy(0,15);
-  if(t.clientY<60)window.scrollBy(0,-15);
-  const target=document.elementFromPoint(t.clientX,t.clientY)?.closest('.dropzone');
-  $$('.dropzone').forEach(z=>z.classList.toggle('drag-over',z===target));
- },{passive:false});
- card.addEventListener('touchend',event=>{
-  if(!touchCardId)return;const t=event.changedTouches[0];const target=document.elementFromPoint(t.clientX,t.clientY)?.closest('.dropzone');
-  if(target){state.classifications[touchCardId]=target.dataset.category;store();const select=$('#select-'+touchCardId);if(select)select.value=target.dataset.category;renderDrops()}
-  clean();
- },{passive:true});
- card.addEventListener('touchcancel',clean,{passive:true});
-}
-
-function caseSelectOptions(selected){return `<option value="">اختاري التصنيف...</option>${Object.entries(categoryLabel).map(([v,t])=>`<option value="${v}" ${selected===v?'selected':''}>${t}</option>`).join('')}`}
-function renderCases(){const list=$('#caseList');list.innerHTML=cases.map(c=>{const sel=state.classifications[c.id]||'';return `<article class="case-card" draggable="true" tabindex="0" data-case="${c.id}" aria-label="${c.name}. ${c.body}. يمكن سحبها أو اختيار تصنيفها"><h3>${c.name} <small>↕ اسحبي أو اختاري</small></h3><p>${c.body}</p><div class="select-wrap"><label class="sr-only" for="select-${c.id}">تصنيف ${c.name}</label><select id="select-${c.id}" data-case-select="${c.id}">${caseSelectOptions(sel)}</select></div></article>`}).join('');$$('[data-case-select]',list).forEach(sel=>sel.addEventListener('change',()=>{state.classifications[sel.dataset.caseSelect]=sel.value;store();renderDrops()}));$$('.case-card',list).forEach(card=>{card.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',card.dataset.case);e.dataTransfer.effectAllowed='move'});card.addEventListener('keydown',e=>{if(e.key==='Enter')card.querySelector('select').focus()});setupTouchDrag(card)});renderDrops()}
-function renderDrops(){const counts={chat:[],agent:[],unknown:[]};for(let [id,type] of Object.entries(state.classifications)){if(counts[type])counts[type].push(id)}$$('.dropzone').forEach(zone=>{zone.querySelector('.drop-items').innerHTML=counts[zone.dataset.category].map(id=>`<span class="dropped-pill">${cases.find(c=>c.id===id).name}</span>`).join('')})}
-$$('.dropzone').forEach(zone=>{zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over')});zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');const id=e.dataTransfer.getData('text/plain');if(cases.some(c=>c.id===id)){state.classifications[id]=zone.dataset.category;store();$(`#select-${id}`).value=zone.dataset.category;renderDrops()}})});
-renderCases();$('#classifyReason').value=state.classReason;$('#classifyReason').addEventListener('input',e=>{state.classReason=e.target.value;store()});
-$('#classifySubmit').addEventListener('click',()=>{const chosen=cases.filter(c=>state.classifications[c.id]);if(chosen.length<6){showFeedback('classifyFeedback','warn','أكملي الحالات الست','اختاري تصنيفًا لكل حالة باستخدام السحب والإفلات أو القائمة المنسدلة.');return}if($('#classifyReason').value.trim().length<25){showFeedback('classifyFeedback','warn','أضيفي تبريرًا أوضح','اكتبي سبب تصنيف إحدى الحالات، مع الاستناد إلى دليل حقيقي من الوصف (٢٥ حرفًا على الأقل).');$('#classifyReason').focus();return}const right=cases.filter(c=>state.classifications[c.id]===c.type).length;$$('.case-card').forEach(card=>{const c=cases.find(c=>c.id===card.dataset.case),good=state.classifications[c.id]===c.type;card.classList.remove('graded-correct','graded-incorrect');card.classList.add(good?'graded-correct':'graded-incorrect');let old=$('.case-reason',card);if(old)old.remove();const p=document.createElement('div');p.className='case-reason';p.textContent=`${good?'✓':'↺'} ${c.why}`;card.appendChild(p)});if(right===6){showFeedback('classifyFeedback','','تحليل الحالات صحيح',`صنّفتِ الحالات الست تصنيفًا مناسبًا. <b>تبريرك مكتوب، لكنه يحتاج مراجعة بشرية أو ذاتية للمعنى؛ لم يُصحَّح آليًا.</b>`);state.classPassed=true;store();markDone(7)}else{showFeedback('classifyFeedback','warn',`${arNum(right)} من ${arNum(6)} تصنيفات صحيحة`,'اقرئي التفسير أسفل كل حالة، ثم عدّلي التصنيفات غير الصحيحة وأعيدي المحاولة.')}});
-$('#classifyReset').addEventListener('click',()=>{state.classifications={};state.classReason='';store();$('#classifyReason').value='';$('#classifyFeedback').hidden=true;renderCases()});
-/* Screen 8: evaluate criterion items only; explanation is self-assessment */
-$('#finalForm').addEventListener('submit',e=>{e.preventDefault();const ability=$$('input[name="finalAbilities"]:checked').map(x=>x.value);const abilityRight=ability.length===3&&['collect','compare','uncertainty'].every(x=>ability.includes(x));const tool=$('input[name="finalTools"]:checked')?.value;const limit=$('input[name="finalLimit"]:checked')?.value;const consent=$('input[name="finalConsent"]:checked')?.value;const reason=$('#finalReason').value.trim();const acknowledged=$('#reasonSelfCheck').checked; if(!tool||!limit||!consent||ability.length===0){showFeedback('finalFeedback','warn','أكملي الأسئلة الموضوعية','هناك إجابات ناقصة. اختاري إجابة في كل معيار، ثم اكتبي التبرير.');return}if(reason.length<45||!acknowledged){showFeedback('finalFeedback','warn','أكملي التبرير والمراجعة الذاتية','اكتبي تبريرًا من ٤٥ حرفًا على الأقل وراجعيه على ضوء المعايير. لا يُصحّح النص تلقائيًا.');return}const checks=[abilityRight,tool==='respect',limit==='flag',consent==='approve'];const score=checks.filter(Boolean).length;const explanation=`<ul><li>${checks[0]?'✓':'✗'} القدرات: جمع بيانات موثوقة، ومقارنة مؤهلات، وتوضيح ما لا نعرفه، دون ضمان قبول.</li><li>${checks[1]?'✓':'✗'} الأدوات: احترام قيود الوصول وعدم تجاوزها.</li><li>${checks[2]?'✓':'✗'} المعلومات الناقصة: التصريح بعدم اليقين واللجوء للتحقق.</li><li>${checks[3]?'✓':'✗'} الإجراء الحساس: لا تُرسل السيرة الذاتية دون موافقة صريحة.</li></ul><p>التبرير الكتابي: يُراجع ذاتيًا أو بواسطة المعلمة وفق: الأدلة، القيود، الإشراف، ومنطق القرار. التحقق من طوله لا يثبت جودته.</p>`;if(score>=3){showFeedback('finalFeedback','','نتيجة الاختيار: '+arNum(score)+' من '+arNum(4),`أحرزتِ ${arNum(score)} من ${arNum(4)} في الأسئلة الموضوعية. راجعي أي معيار لم يتحقق. ${explanation}`);state.finalPassed=true;store();markDone(8)}else{showFeedback('finalFeedback','warn','نتيجة الاختيار: '+arNum(score)+' من '+arNum(4),`راجعي المعيارين غير الصحيحين على الأقل ثم أعيدي المحاولة. ${explanation}`)};$('#finalFeedback').scrollIntoView({behavior:'smooth',block:'center'})});
-/* restore known responses for navigation continuity */
-if(state.introChoice){const e=$(`input[name="introChoice"][value="${state.introChoice}"]`);if(e)e.checked=true}
-if(state.videoChoice){const e=$(`input[name="videoChoice"][value="${state.videoChoice}"]`);if(e)e.checked=true}
-/* Startup */
-goFromHash();
+function route(){const current=valid(location.hash.replace('#',''));names.forEach(n=>{$('#'+n).hidden=n!==current;const a=$('[data-nav="'+n+'"]');a.classList.toggle('active',n===current);if(n===current)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});add('viewed',current);progress();closeMenu();window.scrollTo({top:0,behavior:'instant'});}
+function openMenu(){$('#side').classList.add('open');$('#overlay').hidden=false;$('#menuBtn').setAttribute('aria-expanded','true');$('#closeMenu').focus()}
+function closeMenu(){$('#side').classList.remove('open');$('#overlay').hidden=true;$('#menuBtn').setAttribute('aria-expanded','false')}
+$('#menuBtn').addEventListener('click',openMenu);$('#closeMenu').addEventListener('click',()=>{closeMenu();$('#menuBtn').focus()});$('#overlay').addEventListener('click',closeMenu);
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#side').classList.contains('open')){closeMenu();$('#menuBtn').focus()}});
+window.addEventListener('hashchange',route);$$('[data-next]').forEach(b=>b.addEventListener('click',()=>location.hash=b.dataset.next));$$('[data-prev]').forEach(b=>b.addEventListener('click',()=>location.hash=b.dataset.prev));
+const stations=[
+ ['RLO 01','وكلاء الذكاء الاصطناعي: المفهوم وآلية العمل والتطبيقات','تستكشف المتعلمة مفهوم الوكيل الذكي وخصائصه، وتتابع كيفية تنفيذ المهام وتطبيقاته المهنية.'],
+ ['RLO 02','وكيل المواءمة الوظيفية وتحليل فجوة المهارات','تحلل المتعلمة مدى توافق مهاراتها مع متطلبات وظيفة مستهدفة، وتحدد فجوات المهارات بمساعدة وكيل.'],
+ ['RLO 03','وكيل التدريب على المقابلات المهنية','تتدرب المتعلمة على الاستجابة لأسئلة المقابلات، وتستخدم التغذية الراجعة لتطوير استعدادها المهني.'],
+ ['RLO 04','وكيل محاكاة مواقف العمل','تحلل المتعلمة موقفًا مهنيًا في تصميم التعليم، وتختار القرار الأنسب مع تبريره.']
+];
+function setStation(i,track){i=Number(i);const t=stations[i];if(!t)return;$('#stationId').textContent=t[0];$('#stationTitle').textContent=t[1];$('#stationText').textContent=t[2];$$('[data-station]').forEach(b=>{const yes=+b.dataset.station===i;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes))});if(track){add('stations',i);progress()}}
+$$('[data-station]').forEach(b=>b.addEventListener('click',()=>setStation(b.dataset.station,true)));
+const outcomes=[
+ ['الوحدة الأولى / RLO1','المهارة المستهدفة: الفهم والتمييز','تحدد المتعلمة خصائص نظام وكيلي في مثال مهني، وتشرح ما يميزه عن أداة تقدم إجابة فقط.'],
+ ['الوحدة الثانية / RLO2','المهارة المستهدفة: التحليل','تقارن المتعلمة مهاراتها بمتطلبات وظيفة مستهدفة باستخدام وكيل، وتحدد فجوات المهارات.'],
+ ['الوحدة الثالثة / RLO3','المهارة المستهدفة: التطبيق','تجري المتعلمة مقابلة تدريبية باستخدام وكيل، وتطبق استراتيجيات لتحسين إجاباتها.'],
+ ['الوحدة الرابعة / RLO4','المهارة المستهدفة: التقويم واتخاذ القرار','تختار المتعلمة القرار الأنسب لموقف مهني افتراضي في تصميم التعليم، وتوضح سبب اختيارها.']
+];
+function setOutcome(i,track){i=Number(i);const t=outcomes[i];if(!t)return;$('#outcomeUnit').textContent=t[0];$('#outcomeSkill').textContent=t[1];$('#outcomeExample').textContent=t[2];$$('[data-outcome]').forEach(b=>{const yes=+b.dataset.outcome===i;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes))});if(track){add('outcomes',i);progress()}}
+$$('[data-outcome]').forEach(b=>b.addEventListener('click',()=>setOutcome(b.dataset.outcome,true)));
+const rules=$$('#rules details');rules.forEach((detail,i)=>detail.addEventListener('toggle',()=>{if(detail.open){add('rules',i);progress();updateReady()}}));
+function updateReady(){const checkbox=$('#readyCheckbox');checkbox.checked=!!data.ready;const completeRules=data.rules.length===8;checkbox.disabled=!completeRules;const active=completeRules&&data.ready;$('#launchLink').classList.toggle('disabled',!active);$('#launchLink').setAttribute('aria-disabled',String(!active));$('#launchLink').tabIndex=active?0:-1;$('#readyHint').textContent=completeRules?'يمكنك تأكيد الاستعداد ثم بدء الوحدة الأولى.':`استكشفي الإرشادات الثمانية أولًا (${digits(data.rules.length)} من ٨).`}
+$('#readyCheckbox').addEventListener('change',e=>{data.ready=!!e.target.checked;save();updateReady();progress()});
+$('#launchLink').addEventListener('click',e=>{if($('#launchLink').getAttribute('aria-disabled')==='true')e.preventDefault()});
+const video=$('#introVideo'),placeholder=$('#videoPlaceholder');
+function videoState(){placeholder.hidden=false;video.hidden=true;}
+video.addEventListener('loadedmetadata',()=>{if(video.videoWidth>0){placeholder.hidden=true;video.hidden=false}});
+video.addEventListener('error',videoState);video.addEventListener('ended',()=>{data.videoEnded=true;save();progress()});
+video.load();
+$('#resetBtn').addEventListener('click',()=>{if(!confirm('هل تريدين إعادة ضبط تقدم المقدمة فقط؟ لن يتأثر تقدم الوحدة الأولى.'))return;data={viewed:[],completed:[],videoEnded:false,stations:[],outcomes:[],rules:[],ready:false};rules.forEach(d=>d.open=false);setStation(0,false);setOutcome(0,false);save();updateReady();location.hash='intro';route()});
+// تقدم الفيديو مرتبط بحدث ended، وليس بفتح الشاشة أو مدة تقديرية.
+setStation(0,false);setOutcome(0,false);updateReady();route();
+})();
