@@ -91,6 +91,49 @@ function simRender(){
 $('#simReset').onclick=()=>{state.simHistory=[];state.done=state.done.filter(x=>x!==6);chosenCase=null;save();simRender();$('#simBars').innerHTML='';note('simFeed','ابدئي المحاكاة من جديد.');updateNav()};
 simRender();
 
+
+const chats=[
+{message:'يا بنت الحلال، العميل يبي ننشر صورًا ما تأكدنا من حقوقها، وش أرد؟',answers:[
+['انشري الصور فورًا.','هذا يعرّض المؤسسة لمخاطر.'],
+['اشرحي المخاطر واقترحي بديلًا مرخصًا مع موعد محدد.','هذا حل عملي، شكرًا!'],
+['قولي له كلامًا قاسيًا عن جودة طلبه.','يمكن نخسر التعاون حتى لو كانت ملاحظتنا صحيحة.']]},
+{message:'الفريق متأخر بالتسليم، وش نسوي عشان ما نخسر الموعد؟',answers:[
+['نحدد الأجزاء الحرجة، ونختبر الأساسيات، ونوضح خطة التسليم.','ممتاز، صار عندنا تصور واضح.'],
+['نوقف مراجعة الجودة كلها.','يمكن نسلم بسرعة لكن بأخطاء كثيرة.'],
+['نترك كل شخص يتصرف لحاله.','هذا يزيد التشتت.']]},
+{message:'المديرة تبي اختبار طويل وهو ما يقيس الهدف، كيف أناقشها؟',answers:[
+['أوافق دون مراجعة.','الكمية لا تكفي للحكم على الجودة.'],
+['أعرض مواءمة البنود مع الهدف وأقترح بديلًا مع دليل.','أبدعتِ، كذا أوضح موقفي باحترام.'],
+['أهاجم رأيها أمام الفريق.','الخلاف المهني يحتاج احترامًا وتبريرًا.']]}
+];
+function chatRender(){
+ const root=$('#chatActivity');root.innerHTML='';
+ state.chat.forEach((choiceIndex,i)=>{
+  const c=chats[i];
+  const first=document.createElement('div');first.className='bubble other';first.textContent=c.message;root.append(first);
+  const mine=document.createElement('div');mine.className='bubble mine';mine.textContent=c.answers[choiceIndex][0];root.append(mine);
+  const response=document.createElement('div');response.className='bubble other';response.textContent=c.answers[choiceIndex][1];root.append(response);
+ });
+ if(state.chat.length===3){const msg=document.createElement('div');msg.className='bubble other';msg.textContent='الحين عرفت إن القرار يحتاج موازنة بين الجودة والوقت والعلاقة، ويحتاج تبريرًا.';root.append(msg);done(7);return}
+ const idx=state.chat.length,c=chats[idx],q=document.createElement('div');q.className='bubble other';q.textContent=c.message;root.append(q);
+ const options=document.createElement('div');options.className='chat-options';
+ c.answers.forEach((x,i)=>options.append(option(x[0],()=>{state.chat.push(i);save();chatRender();note('chatFeed',x[1])})));
+ root.append(options);
+}
+$('#chatReset').onclick=()=>{state.chat=[];state.done=state.done.filter(x=>x!==7);save();chatRender();updateNav();note('chatFeed','بدأت محادثة جديدة.')};chatRender();
+const enrich=[
+['ما جوهر المشكلة؟','افصلي بين الطلب الظاهر والاحتياج التعليمي الذي تؤيده الأدلة.'],
+['من يتأثر بالقرار؟','انظري إلى المتعلمين والعميل وفريق التطوير ودرجة تأثير الاستجابة عليهم.'],
+['ما أثر القرار على الجودة والوقت والعلاقة؟','قد يحسن الخيار أحد الأبعاد ويؤثر في بُعد آخر. قارني البدائل.'],
+['من يملك القرار النهائي؟','يمكن للوكيل اقتراح بدائل، لكن الموافقة والتنفيذ مسؤولية أصحاب الصلاحية.']
+];
+enrich.forEach(([title,info])=>{
+ const btn=document.createElement('button');btn.type='button';btn.className='flip-card';btn.setAttribute('aria-label','اكشفي البطاقة: '+title);
+ btn.innerHTML='<strong>'+title+'</strong><span>اضغطي للكشف</span>';
+ btn.onclick=()=>{const on=btn.classList.toggle('flipped');btn.innerHTML='<strong>'+title+'</strong><span>'+(on?info:'اضغطي للكشف')+'</span>'};
+ $('#enrich').append(btn);
+});
+
 /* INSERT_ACTIVITIES */
 const m=location.hash.match(/^#screen-(\d+)$/);go(m?+m[1]:1,false);
 })();
