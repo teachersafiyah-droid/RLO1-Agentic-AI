@@ -53,6 +53,44 @@ function renderBalance(){const root=$('#balance');root.innerHTML='';balanceData.
 $('#checkBalance').onclick=()=>{if(balanceData.some((_,i)=>state.balance[i]===undefined||state.balance[i]==='')){note('balanceFeed','صنفي الاستجابات الخمس أولًا.');return}let score=0;balanceData.forEach((d,i)=>{const el=$('[data-balance="'+i+'"]');let ok=Number(state.balance[i])===d[1];if(ok)score++;el.classList.toggle('correct',ok);el.classList.toggle('incorrect',!ok);let old=$('.balance-detail',el);if(old)old.remove();const s=document.createElement('small');s.className='balance-detail';s.textContent=(ok?'✓ ':'✗ الأصح: '+kinds[d[1]]+'. ')+d[2];el.append(s)});note('balanceFeed','النتيجة '+score+' من 5. '+(score===5?'أحسنتِ!':'راجعي تعليقات التصنيف ثم حاولي مجددًا.'));if(score===5)done(5)};
 $('#resetBalance').onclick=()=>{state.balance={};state.done=state.done.filter(n=>n!==5);save();renderBalance();updateNav();note('balanceFeed','تمت إعادة النشاط.')};renderBalance();
 
+
+const cases=[
+{title:'عميل يطلب صورًا غير مرخصة',question:'أبغى ننشر الصور الليلة، حتى لو ما عندنا تصريح.',options:[
+['أنشرها كما هي.',[24,92,48],'قد تكون هناك مشكلة حقوق نشر.'],
+['أشرح المخاطر وأعرض صورًا مرخصة بديلة.',[94,76,91],'ممتاز، نراجع البديل المرخص قبل الإطلاق.'],
+['أرفض التعاون دون اقتراح.',[80,17,24],'نحتاج إلى خطة بديلة.']]},
+{title:'تأخر تسليم نشاط تفاعلي',question:'النشاط ما خلص والموعد بكرة، وش نسوي؟',options:[
+['نحدد الأولويات ونسلم نسخة آمنة بعد اختبار الحد الأدنى ونتواصل.',[89,80,92],'الخطة واضحة ويمكن تنفيذها.'],
+['نلغي فحص الجودة.',[28,96,47],'مخاطرة بأخطاء في المنتج.'],
+['نلوم الفريق أمام العميل.',[43,43,13],'تضررت الثقة وما زال التأخير قائمًا.']]},
+{title:'اختبار لا يتسق مع نواتج التعلم',question:'أبي اختبارًا من عشرين سؤالًا حتى لو الهدف مهاري.',options:[
+['أضيف الأسئلة دون مراجعة.',[31,94,47],'زيادة العدد ليست دليلًا على جودة التقويم.'],
+['أرفض الطلب بحدة.',[66,40,21],'نحتاج إلى حوار وبديل مهني.'],
+['أعرض مصفوفة مواءمة وأقترح بنودًا تقيس الأداء.',[96,75,90],'نراجع البديل على أساس الهدف والدليل.']]}
+];
+let chosenCase=null;
+function simRender(){
+ const root=$('#simActivity');root.innerHTML='<h2>اختاري أحد المواقف الثلاثة</h2>';
+ const menu=document.createElement('div');menu.className='choices';
+ cases.forEach((item,i)=>menu.append(option(item.title,()=>{chosenCase=i;simRender();$('#simBars').innerHTML='';note('simFeed','اختاري استجابة بعد قراءة طلب الطرف الآخر.')})));
+ root.append(menu);
+ if(chosenCase===null)return;
+ const c=cases[chosenCase],a=document.createElement('div');a.className='alert';a.textContent='رسالة الطرف الآخر: '+c.question;root.append(a);
+ const area=document.createElement('div');area.className='choices';
+ c.options.forEach(item=>{
+  area.append(option(item[0],()=>{
+   const names=['الجودة','الوقت','العلاقة'];
+   $('#simBars').innerHTML='<div class="sim-outcome">مؤشرات افتراضية لتوضيح المفاضلات، وليست تنبؤات أو نسب أداء حقيقية.</div>'+item[1].map((v,i)=>'<div class="sim-meter"><span>'+names[i]+'</span><div class="meter"><span style="width:'+v+'%"></span></div><strong>'+v+'</strong></div>').join('');
+   note('simFeed','رد الطرف الآخر: '+item[2]);
+   if(!state.simHistory.includes(chosenCase))state.simHistory.push(chosenCase);
+   save();if(state.simHistory.length===3)done(6);
+  }));
+ });
+ root.append(area);
+}
+$('#simReset').onclick=()=>{state.simHistory=[];state.done=state.done.filter(x=>x!==6);chosenCase=null;save();simRender();$('#simBars').innerHTML='';note('simFeed','ابدئي المحاكاة من جديد.');updateNav()};
+simRender();
+
 /* INSERT_ACTIVITIES */
 const m=location.hash.match(/^#screen-(\d+)$/);go(m?+m[1]:1,false);
 })();
