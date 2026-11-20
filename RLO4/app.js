@@ -41,6 +41,18 @@ function renderClass(){const root=$('#classify');root.innerHTML='';classData.for
 $('#checkClassify').onclick=()=>{if(classData.some((_,i)=>!state.classify[i])){note('classifyFeed','صنفي العبارات الست أولًا.');return;}let score=0;classData.forEach((d,i)=>{const card=$('[data-card="'+i+'"]');const ok=state.classify[i]===d[1];if(ok)score++;card.classList.toggle('correct',ok);card.classList.toggle('incorrect',!ok);let old=$('.explain',card);if(old)old.remove();const msg=document.createElement('small');msg.className='explain';msg.textContent=(ok?'✓ ':'✗ الصحيح: '+(d[1]==='ظاهر'?'الطلب الظاهر':'الاحتياج الحقيقي')+' — ')+d[2];card.append(msg);});note('classifyFeed','نتيجتك '+score+' من 6. '+(score===6?'نجحتِ في التمييز بين الطلب والاحتياج.':'راجعي التفسير تحت كل بطاقة، ويمكنك تعديل تصنيفها.'));if(score===6)done(4);};
 $('#resetClassify').onclick=()=>{state.classify={};state.done=state.done.filter(n=>n!==4);save();renderClass();updateNav();note('classifyFeed','يمكنك المحاولة مرة أخرى.');};renderClass();
 
+
+const kinds=['تضحي بالجودة','تضحي بالوقت','تضحي بالعلاقة','متوازنة'];
+const balanceData=[
+['نشر محتوى دون اختبار ومراجعة',0,'إلغاء المراجعة يضعف الجودة.'],
+['إعادة بناء الدرس كاملًا لتعديل جزئي صغير',1,'قد يستهلك الوقت دون حاجة.'],
+['رفض النقاش مع العميل بلهجة هجومية',2,'يضعف العلاقة المهنية.'],
+['مناقشة حد آمن للجودة مع بدائل مناسبة للموعد',3,'يحافظ على الجودة والتعاون والوقت.'],
+['تنفيذ تغيير دون إبلاغ بقية الفريق',2,'يضعف التواصل والتعاون.']];
+function renderBalance(){const root=$('#balance');root.innerHTML='';balanceData.forEach((d,i)=>{const c=document.createElement('div');c.className='balance-card';c.dataset.balance=i;const h=document.createElement('h3');h.textContent=(i+1)+'. '+d[0];const s=document.createElement('select');s.setAttribute('aria-label','تصنيف استجابة '+(i+1));[['','اختاري وصف الاستجابة'],...kinds.map((x,j)=>[String(j),x])].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;s.append(o)});s.value=state.balance[i]??'';s.onchange=()=>{state.balance[i]=s.value;save()};c.append(h,s);root.append(c)})}
+$('#checkBalance').onclick=()=>{if(balanceData.some((_,i)=>state.balance[i]===undefined||state.balance[i]==='')){note('balanceFeed','صنفي الاستجابات الخمس أولًا.');return}let score=0;balanceData.forEach((d,i)=>{const el=$('[data-balance="'+i+'"]');let ok=Number(state.balance[i])===d[1];if(ok)score++;el.classList.toggle('correct',ok);el.classList.toggle('incorrect',!ok);let old=$('.balance-detail',el);if(old)old.remove();const s=document.createElement('small');s.className='balance-detail';s.textContent=(ok?'✓ ':'✗ الأصح: '+kinds[d[1]]+'. ')+d[2];el.append(s)});note('balanceFeed','النتيجة '+score+' من 5. '+(score===5?'أحسنتِ!':'راجعي تعليقات التصنيف ثم حاولي مجددًا.'));if(score===5)done(5)};
+$('#resetBalance').onclick=()=>{state.balance={};state.done=state.done.filter(n=>n!==5);save();renderBalance();updateNav();note('balanceFeed','تمت إعادة النشاط.')};renderBalance();
+
 /* INSERT_ACTIVITIES */
 const m=location.hash.match(/^#screen-(\d+)$/);go(m?+m[1]:1,false);
 })();
