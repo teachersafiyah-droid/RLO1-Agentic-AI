@@ -1,23 +1,24 @@
 'use strict';
 (()=>{
-const names=['intro','description','outcomes','guidelines'];
+const names=['cover','intro','description','outcomes','guidelines'];
 const key='ai-career-introduction-v1';
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const digits=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[Number(d)]);
-let data={viewed:[],completed:[],videoEnded:false,stations:[],outcomes:[],rules:[],ready:false};
+let data={viewed:[],completed:[],coverStarted:false,videoEnded:false,stations:[],outcomes:[],rules:[],ready:false};
 try{const parsed=JSON.parse(localStorage.getItem(key)||'null');if(parsed&&typeof parsed==='object')data={...data,...parsed}}catch(e){console.warn('تعذر استعادة التقدم المخزن.');}
 const save=()=>{try{localStorage.setItem(key,JSON.stringify(data))}catch(e){console.warn('تعذر حفظ التقدم في هذا المتصفح.')}};
 const add=(field,value)=>{if(!data[field].includes(value))data[field].push(value);save()};
 const has=(field,value)=>data[field].includes(value);
-const valid=s=>names.includes(s)?s:'intro';
+const valid=s=>names.includes(s)?s:'cover';
 function progress(){
   data.completed=[];
+  if(data.coverStarted)data.completed.push('cover');
   if(data.videoEnded)data.completed.push('intro');
   if(data.stations.length===4)data.completed.push('description');
   if(data.outcomes.length===4)data.completed.push('outcomes');
   if(data.rules.length===8&&data.ready)data.completed.push('guidelines');
-  const pct=Math.round(data.completed.length/4*100);
+  const pct=Math.round(data.completed.length/5*100);
   $('#percent').textContent=digits(pct)+'٪';$('#progressFill').style.width=pct+'%';
   $('#progressBar').setAttribute('aria-valuenow',String(pct));
   names.forEach(n=>{const el=document.querySelector('[data-check="'+n+'"]');el.textContent=data.completed.includes(n)?'✓':has('viewed',n)?'•':'○';el.setAttribute('aria-label',data.completed.includes(n)?'مكتمل':has('viewed',n)?'تمت الزيارة':'لم يُزر')});
@@ -49,12 +50,13 @@ const rules=$$('#rules details');rules.forEach((detail,i)=>detail.addEventListen
 function updateReady(){const checkbox=$('#readyCheckbox');checkbox.checked=!!data.ready;const completeRules=data.rules.length===8;checkbox.disabled=!completeRules;const active=completeRules&&data.ready;$('#launchLink').classList.toggle('disabled',!active);$('#launchLink').setAttribute('aria-disabled',String(!active));$('#launchLink').tabIndex=active?0:-1;$('#readyHint').textContent=completeRules?'يمكنك تأكيد الاستعداد ثم بدء الوحدة الأولى.':`استكشفي الإرشادات الثمانية أولًا (${digits(data.rules.length)} من ٨).`}
 $('#readyCheckbox').addEventListener('change',e=>{data.ready=!!e.target.checked;save();updateReady();progress()});
 $('#launchLink').addEventListener('click',e=>{if($('#launchLink').getAttribute('aria-disabled')==='true')e.preventDefault()});
+$('#coverStart').addEventListener('click',()=>{data.coverStarted=true;save();progress();location.hash='intro';});
 const video=$('#introVideo'),placeholder=$('#videoPlaceholder');
 function videoState(){placeholder.hidden=false;video.hidden=true;}
 video.addEventListener('loadedmetadata',()=>{if(video.videoWidth>0){placeholder.hidden=true;video.hidden=false}});
 video.addEventListener('error',videoState);video.addEventListener('ended',()=>{data.videoEnded=true;save();progress()});
 video.load();
-$('#resetBtn').addEventListener('click',()=>{if(!confirm('هل تريدين إعادة ضبط تقدم المقدمة فقط؟ لن يتأثر تقدم الوحدة الأولى.'))return;data={viewed:[],completed:[],videoEnded:false,stations:[],outcomes:[],rules:[],ready:false};rules.forEach(d=>d.open=false);setStation(0,false);setOutcome(0,false);save();updateReady();location.hash='intro';route()});
+$('#resetBtn').addEventListener('click',()=>{if(!confirm('هل تريدين إعادة ضبط تقدم المقدمة فقط؟ لن يتأثر تقدم الوحدة الأولى.'))return;data={viewed:[],completed:[],videoEnded:false,stations:[],outcomes:[],rules:[],ready:false};rules.forEach(d=>d.open=false);setStation(0,false);setOutcome(0,false);save();updateReady();location.hash='cover';route()});
 // تقدم الفيديو مرتبط بحدث ended، وليس بفتح الشاشة أو مدة تقديرية.
 setStation(0,false);setOutcome(0,false);updateReady();route();
 })();
