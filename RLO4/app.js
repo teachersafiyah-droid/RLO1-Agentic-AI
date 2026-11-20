@@ -134,6 +134,35 @@ enrich.forEach(([title,info])=>{
  $('#enrich').append(btn);
 });
 
-/* INSERT_ACTIVITIES */
+
+const answers1=['أنشر الصور حتى لا يفوت الموعد.','أرفض دون طرح خيارات.','أوضح خطر الحقوق وأقترح صورة مرخصة وأطلب اعتماد البديل.'];
+const answers2=['أوازن بين الجودة والوقت والعلاقة.','أقبل كل اقتراح من المحاكاة دون مراجعة.','أقيّم أثر الاستجابة على الأطراف المتأثرة.','أبرر القرار بناءً على أدلة الحالة.','أدخل بيانات العملاء الشخصية في المحاكاة دون موافقة.'];
+function finalRender(){
+ const root=$('#finalQuiz');root.innerHTML='';
+ const one=document.createElement('div');one.className='final-question';one.innerHTML='<h3>1. يريد العميل استخدام صور غير مؤكدة الترخيص. ما الاستجابة المهنية الأفضل؟</h3>';
+ answers1.forEach((t,i)=>{const label=document.createElement('label');const input=document.createElement('input');input.type='radio';input.name='finalOne';input.value=i;input.checked=state.finalOne===i;input.onchange=()=>{state.finalOne=i;save()};label.append(input,document.createTextNode(t));one.append(label)});root.append(one);
+ const two=document.createElement('div');two.className='final-question';two.innerHTML='<h3>2. ما الممارسات المناسبة عند استخدام وكيل محاكاة مواقف العمل؟ اختاري كل الصحيح.</h3>';
+ answers2.forEach((t,i)=>{const label=document.createElement('label');const input=document.createElement('input');input.type='checkbox';input.value=i;input.checked=state.finalMany.includes(i);input.onchange=()=>{state.finalMany=input.checked?[...new Set([...state.finalMany,i])]:state.finalMany.filter(x=>x!==i);save()};label.append(input,document.createTextNode(t));two.append(label)});root.append(two);
+}
+$('#checkFinal').onclick=()=>{
+ if(state.finalOne===null||!state.finalMany.length){note('finalFeed','أجيبي عن السؤالين أولًا.');return}
+ const first=state.finalOne===2,second=state.finalMany.length===3&&[0,2,3].every(x=>state.finalMany.includes(x));
+ const explanation1=first?'السؤال الأول صحيح: استجابة تحترم حقوق الصور وتقدم بديلًا عمليًا.':'السؤال الأول: ينبغي تجنب انتهاك الحقوق، مع اقتراح بديل قابل للتنفيذ.';
+ const explanation2=second?'السؤال الثاني صحيح: الموازنة، وتحليل الأطراف، وتبرير القرار بالأدلة.':'السؤال الثاني: الصحيح هو الموازنة، وتقييم أثر القرار، وتبريره بالأدلة؛ لا نقبل حكم المحاكاة دون تحقق ولا نشارك بيانات خاصة.';
+ note('finalFeed',explanation1+' '+explanation2+(first&&second?' ✓ اجتزتِ التقويم الختامي.':' يمكنك المحاولة مجددًا.'));
+ if(first&&second)done(9);
+};
+$('#resetFinal').onclick=()=>{state.finalOne=null;state.finalMany=[];state.done=state.done.filter(x=>x!==9);save();finalRender();updateNav();note('finalFeed','تمت إعادة التقويم.')};finalRender();
+function mirrorUI(){
+ $('#oldWonder').textContent=state.wonder===null?'لم تختاري قرارًا في بداية الوحدة بعد. يمكنك العودة إلى «أتساءل».':wonder[state.wonder][0];
+ $('#reflection').value=state.reflection||'';
+}
+$('#saveReflection').onclick=()=>{
+ const t=$('#reflection').value.trim();
+ if(t.length<25){note('mirrorFeed','اكتبي تأملًا واضحًا من 25 حرفًا على الأقل، مع تبرير قرارك.');return;}
+ state.reflection=t;save();done(10);
+ note('mirrorFeed','✓ حُفظ تأملك محليًا. خلاصة الوحدة: أحدد، ثم أوازن، ثم أحاكي، ثم أقرر وأبرر.');
+};
+
 const m=location.hash.match(/^#screen-(\d+)$/);go(m?+m[1]:1,false);
 })();
