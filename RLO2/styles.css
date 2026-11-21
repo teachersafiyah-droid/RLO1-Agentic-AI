@@ -30,3 +30,10 @@ main{min-height:70vh}.screen{padding:0 0 50px}.content-wrap{max-width:1020px;mar
 :focus-visible{outline:3px solid #e8b75c;outline-offset:3px}
 @media(max-width:800px){.sidebar{position:fixed;right:-330px;z-index:20;transition:right .25s;width:300px}.sidebar.open{right:0}.sidebar-close,.mobile-toggle{display:inline-flex}.shell{display:block}.content-wrap{padding:25px 18px}.hero{grid-template-columns:1fr;padding:45px 22px}.hero-art{max-width:400px;margin:auto}.split,.chat-stage{grid-template-columns:1fr}.shade{position:fixed;inset:0;background:#0008;z-index:15}.summary-cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:500px){.option-grid,.flip-grid,.drop-pair,.mirror-pair{grid-template-columns:1fr}.hero h1{font-size:34px}.topbar{padding:12px}.hero-art{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* Larger, distraction-free video for the Noura story on screen 02 */
+.noura-story-layout{grid-template-columns:minmax(0,1fr);justify-items:center;gap:22px}
+.noura-story-layout .noura-story-video{width:100%;max-width:950px;min-width:0}
+.noura-story-layout .noura-story-video video{width:100%;aspect-ratio:16/9;object-fit:contain;max-height:none}
+.noura-story-layout .job-ad{width:100%;max-width:950px;box-sizing:border-box}
+@media(max-width:640px){.noura-story-layout{gap:15px}.noura-story-layout .noura-story-video{max-width:100%}}
