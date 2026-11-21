@@ -33,3 +33,11 @@
 .agent-arrow{font-size:24px;align-self:center;flex:none;color:#f0c37e;font-weight:700}
 @media(max-width:760px){.video-copy .hero-art{display:block}.agent-flow{flex-wrap:wrap;justify-content:center;gap:7px}.agent-step{flex:1 1 135px;min-height:95px}.agent-arrow{font-size:18px}.agent-step strong{font-size:12px}}
 @media(max-width:390px){.agent-flow{flex-direction:column}.agent-arrow{transform:rotate(-90deg)}}
+
+
+/* Closing message of the introductory video, in place of decorative workflow boxes */
+.video-copy .hero-art{display:block;max-width:590px;margin-top:26px}
+.intro-inspiration{border:1px solid rgba(104,221,221,.58);border-right:4px solid #e8bf77;background:linear-gradient(120deg,rgba(11,75,103,.9),rgba(8,41,64,.8));border-radius:18px;padding:21px 25px;box-shadow:0 14px 28px rgba(3,20,35,.22);display:flex;align-items:center;gap:18px;direction:rtl}
+.intro-inspiration-mark{font-size:32px;color:#e8bf77;line-height:1;flex:0 0 auto}
+.intro-inspiration p{margin:0;color:#ecffff;font-size:clamp(17px,1.6vw,22px);line-height:1.9;font-weight:700}
+@media(max-width:760px){.video-copy .hero-art{display:block}.intro-inspiration{padding:17px 18px;gap:12px}.intro-inspiration p{font-size:17px}}
