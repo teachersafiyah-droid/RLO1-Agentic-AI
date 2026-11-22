@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071d34">
+<meta name="description" content="استبانة تقييم تجربة التعلم في مسار وكلاء الذكاء الاصطناعي لدعم الجاهزية المهنية">
+<title>استبانة تقييم المقرر | مسار التعلم</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap');
+:root{--navy:#071d34;--petrol:#0b405b;--teal:#0aaab5;--gold:#eac47c;--text:#133a50;--muted:#557789;--bg:#eff7fa;--line:#d5e7ed}*{box-sizing:border-box}
+html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;line-height:1.85}
+a{color:inherit}button,input,textarea{font:inherit}button{cursor:pointer}
+.skip{position:absolute;top:-100px;right:8px;background:white;padding:8px;z-index:99}.skip:focus{top:8px}
+header{background:linear-gradient(145deg,#06223a,#0d4560);color:white;padding:23px max(20px,calc((100vw - 1050px)/2));border-bottom:4px solid #2bbbc6}
+.header-top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.header-top a{text-decoration:none;border:1px solid #7fd5dd7d;padding:7px 14px;border-radius:9px;font-size:13px}
+.eyebrow{color:#8fe3e7;font-size:13px;letter-spacing:.03em;font-weight:700}h1{font-size:clamp(28px,5vw,48px);margin:13px 0 8px;line-height:1.45}header p{max-width:800px;color:#d8f1f5;margin:0}
+main{max-width:1050px;margin:28px auto 70px;padding:0 18px}
+.notice,.panel{background:white;border:1px solid var(--line);border-radius:20px;box-shadow:0 12px 35px #0c395515}
+.notice{padding:18px 24px;margin-bottom:19px;border-right:5px solid var(--gold)}.notice strong{color:#0a5c70}
+.progress-card{background:#e0f2f5;padding:14px 20px;border-radius:15px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+progress{height:12px;width:160px;accent-color:#128e9a}.panel{padding:27px;margin-bottom:18px}
+.panel h2{font-size:22px;color:#084c65;margin:0 0 5px}.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+fieldset{padding:0;margin:17px 0 23px;border:0;min-width:0}legend{font-weight:700;padding:0 0 10px;color:#13394f}
+.scale{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;direction:rtl}
+.scale label{display:flex;align-items:center;justify-content:center;min-height:52px;padding:7px 4px;background:#f5fafc;border:1px solid #cadae3;border-radius:12px;text-align:center;font-size:12px;cursor:pointer;line-height:1.65}
+.scale label:has(input:checked){background:#d9f5f4;border-color:#008c98;box-shadow:0 0 0 1px #008c98;color:#063e50;font-weight:700}.scale input{position:absolute;opacity:0;width:1px;height:1px}.scale label:focus-within{outline:3px solid #e2b75e;outline-offset:2px}
+textarea{width:100%;min-height:105px;resize:vertical;padding:14px;border:1px solid #b9d4df;border-radius:12px;line-height:1.8;background:#fbfefe;color:var(--text)}
+fieldset + fieldset{border-top:1px solid #ecf2f4;padding-top:16px}
+button.primary,.secondary{padding:12px 20px;border:0;border-radius:12px;font-weight:700}.primary{background:#08738b;color:#fff}.secondary{background:#e5f3f6;color:#07536b}
+.actions{display:flex;gap:10px;flex-wrap:wrap}.validation{font-size:14px;color:#a13a32;min-height:24px}
+.result{display:none;background:#e7f5f7;border:1px solid #97cdd3;border-radius:16px;padding:20px;margin:20px 0}
+.result.show{display:block}.result h2{margin-top:0}.result p{margin:7px 0}
+footer{color:#5d7b8b;font-size:12px;text-align:center;padding:20px}
+@media(max-width:650px){.panel{padding:19px}.scale{grid-template-columns:1fr;gap:6px}.scale label{min-height:41px;justify-content:flex-start;padding:8px 12px}.progress-card{flex-direction:column;align-items:stretch}progress{width:100%}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">تخطي إلى الاستبانة</a>
+<header><div class="header-top"><span class="eyebrow">مسار التعلم · التقييم الختامي</span><a href="../">العودة إلى المقرر ←</a></div>
+<h1>استبانة تقييم تجربة التعلم</h1>
+<p>تقييم مسار «وكلاء الذكاء الاصطناعي لدعم الجاهزية المهنية لخريجي ماجستير تصميم التعليم والتكنولوجيا» بوحداته الأربع. إجاباتك تساعد في تحسين المحتوى والتفاعلات وتجربة الاستخدام.</p></header>
+<main id="main">
+<div class="notice" role="note"><strong>نسخة تجريبية — جمع الردود غير مفعّل حاليًا.</strong>
+هذه الاستبانة تعمل داخل موقع GitHub Pages، لكن إجاباتك لا تُرسل إلى الباحثة أو أي خادم. يمكن تجربة تعبئتها ومعاينة ملخصها محليًا إلى حين ربط وسيلة استقبال معتمدة. لا تدخلي اسمك أو بريدك أو أي معلومات تعريفية.</div>
+<div class="progress-card"><span id="counter">0 من 18 عبارة مكتملة</span><progress id="progress" max="18" value="0" aria-label="مدى اكتمال عبارات التقييم"></progress></div>
+<form id="survey" novalidate>
+<section class="panel"><h2>أولًا: جودة المحتوى التعليمي</h2><p class="sub">مدى وضوح محتوى المقرر وترابطه مع الأهداف المعلنة.</p><div class="questions" data-domain="content"></div></section>
+<section class="panel"><h2>ثانيًا: سهولة الاستخدام والتنقل</h2><p class="sub">وضوح الواجهة والتعليمات وإمكانية الانتقال بين الوحدات.</p><div class="questions" data-domain="usability"></div></section>
+<section class="panel"><h2>ثالثًا: الأنشطة والتغذية الراجعة</h2><p class="sub">مدى دعم التفاعلات للفهم وتطبيق المعرفة.</p><div class="questions" data-domain="interaction"></div></section>
+<section class="panel"><h2>رابعًا: الوسائط التعليمية</h2><p class="sub">مدى مساهمة الفيديوهات والعناصر البصرية في تحقيق التعلم.</p><div class="questions" data-domain="media"></div></section>
+<section class="panel"><h2>خامسًا: الفائدة المهنية ونقل التعلم</h2><p class="sub">مدى ارتباط المحتوى بمهارات الخريجة ومواقف العمل.</p><div class="questions" data-domain="career"></div></section>
+<section class="panel"><h2>سادسًا: الرضا العام</h2><p class="sub">الانطباع الكلي عن المسار ومدى ملاءمته للفئة المستهدفة.</p><div class="questions" data-domain="satisfaction"></div></section>
+<section class="panel"><h2>أسئلة مفتوحة (اختيارية)</h2>
+<label for="strengths"><strong>ما أكثر عنصر ساعدك على التعلم؟ ولماذا؟</strong></label>
+<textarea id="strengths" maxlength="1000" placeholder="مثال: نشاط معين، فيديو، أو تجربة محاكاة…"></textarea>
+<label for="improvements" style="display:block;margin-top:18px"><strong>ما المقترحات التي ترين أنها ستُحسّن تجربة المقرر؟</strong></label>
+<textarea id="improvements" maxlength="1000" placeholder="اكتبي اقتراحك دون بيانات شخصية…"></textarea>
+</section>
+<section class="panel"><h2>مراجعة الإجابات</h2><p class="sub">يجب الإجابة عن العبارات الثماني عشرة. الأسئلة المفتوحة اختيارية.</p><div class="actions">
+<button type="button" id="review" class="primary">مراجعة الإجابات</button>
+<button type="reset" class="secondary">مسح الإجابات</button>
+</div><p id="validation" class="validation" role="status" aria-live="polite"></p>
+<div class="result" id="result" aria-live="polite"><h2>اكتملت المعاينة بنجاح</h2><p>إجاباتك معروضة محليًا داخل المتصفح فقط؛ لم تُرسل إلى الباحثة.</p><div id="summary"></div></div>
+</section></form>
+</main>
+<footer>استبانة لأغراض تقويم تجربة التعلم · لا تجمع هذه الصفحة بيانات أو معلومات شخصية في وضع المعاينة.</footer>
+<script>
+"use strict";
+const domains={
+content:["كانت أهداف المقرر واضحة بالنسبة لي.","قُدّم المحتوى بتسلسل منطقي يسهل متابعته.","ساعدت الأمثلة على فهم مفاهيم وكلاء الذكاء الاصطناعي."],
+usability:["كان الانتقال بين الوحدات والشاشات واضحًا وسهلًا.","كانت تعليمات الأنشطة مفهومة وكافية لتنفيذها.","كانت النصوص والأزرار وعناصر الواجهة واضحة أثناء الاستخدام."],
+interaction:["ساعدت الأنشطة التفاعلية على تطبيق ما تعلمته.","قدّمت التغذية الراجعة توضيحًا مفيدًا لإجاباتي.","دفعتني مواقف المحاكاة إلى التفكير في الأدلة والبدائل قبل اتخاذ القرار."],
+media:["ساهمت الفيديوهات في توضيح المفاهيم والمهام المهنية.","كانت الصور والعناصر البصرية ملائمة لمحتوى التعلم.","كان تكامل النصوص والوسائط والأنشطة مساعدًا على الفهم."],
+career:["ساعدني المقرر على فهم استخدام الوكلاء في البحث عن فرص العمل.","أصبحت أكثر وعيًا بكيفية تحليل فجوات المهارات ومتطلبات الوظائف.","قدّمت أنشطة المقابلات ومواقف العمل خبرة تدريبية ذات صلة بمساري المهني."],
+satisfaction:["كانت تجربة التعلم في المقرر مشجعة على الاستمرار.","أرى أن محتوى المقرر مناسب لخريجي تصميم التعليم والتكنولوجيا.","أنا راضية عمومًا عن تجربة التعلم في المقرر."]
+};
+const labels=["أوافق بشدة","أوافق","محايدة","لا أوافق","لا أوافق بشدة"];
+const form=document.querySelector("#survey");
+let idx=0;Object.entries(domains).forEach(([domain,items])=>{const section=document.querySelector('[data-domain="'+domain+'"]');items.forEach(prompt=>{idx++;const f=document.createElement("fieldset");const legend=document.createElement("legend");legend.textContent=idx+". "+prompt;f.appendChild(legend);const scale=document.createElement("div");scale.className="scale";labels.forEach((label,i)=>{const l=document.createElement("label");const input=document.createElement("input");input.type="radio";input.name="q"+idx;input.value=String(5-i);input.setAttribute("aria-label",label);l.append(input,document.createTextNode(label));scale.append(l)});f.append(scale);section.append(f)})});
+const counter=document.querySelector("#counter"),progress=document.querySelector("#progress"),validation=document.querySelector("#validation"),result=document.querySelector("#result");
+function update(){const checked=new Set([...form.querySelectorAll('input[type="radio"]:checked')].map(x=>x.name));counter.textContent=checked.size+" من 18 عبارة مكتملة";progress.value=checked.size;result.classList.remove("show")}
+form.addEventListener("change",update);
+document.querySelector("#review").addEventListener("click",()=>{const answers=[...Array(18)].map((_,i)=>form.querySelector('input[name="q'+(i+1)+'"]:checked')?.value??null);const missing=answers.findIndex(x=>x===null);if(missing>=0){validation.textContent="يرجى الإجابة عن العبارة رقم "+(missing+1)+" أولًا.";form.querySelector('input[name="q'+(missing+1)+'"]').closest("fieldset").scrollIntoView({behavior:"smooth",block:"center"});return}validation.textContent="";const names=Object.keys(domains);let html="<p><strong>ملخص تجريبي لإجاباتك:</strong></p><ul>";names.forEach((key,i)=>{const list=answers.slice(i*3,i*3+3).map(Number),avg=(list.reduce((a,b)=>a+b,0)/3).toFixed(2);const display={content:"المحتوى التعليمي",usability:"سهولة الاستخدام",interaction:"التفاعل",media:"الوسائط",career:"الفائدة المهنية",satisfaction:"الرضا العام"}[key];html+="<li>"+display+": "+avg+" من 5</li>"});html+="</ul><p><strong>لم تُرسل هذه النتائج أو تُحفَظ في قاعدة بيانات.</strong></p>";document.querySelector("#summary").innerHTML=html;result.classList.add("show");result.scrollIntoView({behavior:"smooth",block:"start"})});
+form.addEventListener("reset",()=>{setTimeout(()=>{validation.textContent="";update();},0)});
+</script>
+</body></html>
