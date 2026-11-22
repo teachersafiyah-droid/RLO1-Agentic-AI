@@ -1,4 +1,17 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#071d34"><meta name="description" content="RLO2: وكيل المواءمة الوظيفية وتحليل فجوة المهارات — رحلة تعلم تفاعلية مع نورة"><title>وكيل المواءمة الوظيفية | RLO2</title><link rel="stylesheet" href="styles.css?v=layout-fix-20261122"><script defer src="app.js"></script>
+<style id="rlo2-layout-correction">
+/* RLO2: sidebar participates in flex layout; never reserve its width again. */
+@media(min-width:801px){
+  .shell{display:flex!important;flex-direction:row!important;align-items:stretch!important}
+  .shell>.sidebar{position:sticky!important;top:0!important;right:auto!important;bottom:auto!important;width:290px!important;flex:0 0 290px!important;transform:none!important}
+  .shell>.main-column{display:flex!important;flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important;margin-right:0!important;margin-left:0!important}
+  .main-column .content-wrap{box-sizing:border-box;max-width:1160px!important;width:calc(100% - 56px)!important;padding:40px 12px 70px!important;margin-inline:auto!important}
+}
+@media(max-width:800px){
+  .shell>.main-column{width:100%!important;max-width:none!important;margin:0!important;display:flex;flex-direction:column}
+  .main-column .content-wrap{width:100%!important;max-width:100%!important;box-sizing:border-box;padding:25px 18px!important}
+}
+</style>
 <style id="course-navigation-styles">
 .course-switcher{position:fixed;left:18px;bottom:18px;z-index:2000;direction:rtl;font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;color:#f6fdff;max-width:calc(100vw - 36px)}
 .course-switcher summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;background:#083554;color:white;padding:12px 17px;border:1px solid #40bfcb;border-radius:14px;font-size:14px;font-weight:700;box-shadow:0 8px 28px #031c2f55;min-height:44px}
