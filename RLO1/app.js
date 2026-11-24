@@ -122,5 +122,14 @@ $('#finalForm').addEventListener('submit',e=>{e.preventDefault();const ability=$
 /* restore known responses for navigation continuity */
 if(state.introChoice){const e=$(`input[name="introChoice"][value="${state.introChoice}"]`);if(e)e.checked=true}
 if(state.videoChoice){const e=$(`input[name="videoChoice"][value="${state.videoChoice}"]`);if(e)e.checked=true}
+/* Acknowledgement for the introduction cards (unit one only). */
+const introAck=$('#unitIntroAcknowledge');
+function renderIntroAck(){
+ if(!introAck)return;
+ if(state.done[0]){introAck.textContent='✓ اطلعت على وصف الوحدة ونتائج تعلمها';introAck.disabled=true}
+ else {introAck.textContent='اطلعت على وصف الوحدة ونتائج تعلمها';introAck.disabled=false}
+}
+if(introAck)introAck.addEventListener('click',()=>{markDone(1);renderIntroAck()});
+renderIntroAck();
 /* Startup */
 goFromHash();
