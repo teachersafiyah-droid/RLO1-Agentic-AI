@@ -54,11 +54,10 @@ footer{color:#5d7b8b;font-size:12px;text-align:center;padding:20px}
 <label for="improvements" style="display:block;margin-top:18px"><strong>ما المقترحات التي ترين أنها ستُحسّن تجربة المقرر؟</strong></label>
 <textarea id="improvements" maxlength="1000" placeholder="اكتبي اقتراحك دون بيانات شخصية…"></textarea>
 </section>
-<section class="panel"><h2>مراجعة الإجابات</h2><p class="sub">يجب الإجابة عن العبارات الثماني عشرة. الأسئلة المفتوحة اختيارية.</p><div class="actions">
-<button type="button" id="review" class="primary">مراجعة الإجابات</button>
-<button type="reset" class="secondary">مسح الإجابات</button>
+<section class="panel"><h2>إرسال الاستبانة</h2><p class="sub">يجب الإجابة عن العبارات الثماني عشرة. الأسئلة المفتوحة اختيارية.</p><div class="actions">
+<button type="submit" id="review" class="primary">إرسال</button>
 </div><p id="validation" class="validation" role="status" aria-live="polite"></p>
-<div class="result" id="result" aria-live="polite"><h2>اكتملت المعاينة بنجاح</h2><p>إجاباتك معروضة محليًا داخل المتصفح فقط؛ لم تُرسل إلى الباحثة.</p><div id="summary"></div></div>
+<div class="result" id="result" role="status" aria-live="polite"><p>تم إرسال الاستجابة</p></div>
 </section></form>
 </main>
 <footer>استبانة لأغراض تقويم تجربة التعلم · لا تجمع هذه الصفحة بيانات أو معلومات شخصية في وضع المعاينة.</footer>
@@ -78,8 +77,22 @@ let idx=0;Object.entries(domains).forEach(([domain,items])=>{const section=docum
 const counter=document.querySelector("#counter"),progress=document.querySelector("#progress"),validation=document.querySelector("#validation"),result=document.querySelector("#result");
 function update(){const checked=new Set([...form.querySelectorAll('input[type="radio"]:checked')].map(x=>x.name));counter.textContent=checked.size+" من 18 عبارة مكتملة";progress.value=checked.size;result.classList.remove("show")}
 form.addEventListener("change",update);
-document.querySelector("#review").addEventListener("click",()=>{const answers=[...Array(18)].map((_,i)=>form.querySelector('input[name="q'+(i+1)+'"]:checked')?.value??null);const missing=answers.findIndex(x=>x===null);if(missing>=0){validation.textContent="يرجى الإجابة عن العبارة رقم "+(missing+1)+" أولًا.";form.querySelector('input[name="q'+(missing+1)+'"]').closest("fieldset").scrollIntoView({behavior:"smooth",block:"center"});return}validation.textContent="";const names=Object.keys(domains);let html="<p><strong>ملخص تجريبي لإجاباتك:</strong></p><ul>";names.forEach((key,i)=>{const list=answers.slice(i*3,i*3+3).map(Number),avg=(list.reduce((a,b)=>a+b,0)/3).toFixed(2);const display={content:"المحتوى التعليمي",usability:"سهولة الاستخدام",interaction:"التفاعل",media:"الوسائط",career:"الفائدة المهنية",satisfaction:"الرضا العام"}[key];html+="<li>"+display+": "+avg+" من 5</li>"});html+="</ul><p><strong>لم تُرسل هذه النتائج أو تُحفَظ في قاعدة بيانات.</strong></p>";document.querySelector("#summary").innerHTML=html;result.classList.add("show");result.scrollIntoView({behavior:"smooth",block:"start"})});
-form.addEventListener("reset",()=>{setTimeout(()=>{validation.textContent="";update();},0)});
+form.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const answers=Array.from({length:18},(_,i)=>form.querySelector('input[name="q'+(i+1)+'"]:checked')?.value??null);
+ const missing=answers.findIndex(answer=>answer===null);
+ if(missing>=0){validation.textContent="يرجى الإجابة عن العبارة رقم "+(missing+1)+" أولًا.";form.querySelector('input[name="q'+(missing+1)+'"]').closest("fieldset").scrollIntoView({behavior:"smooth",block:"center"});return}
+ const endpoint=form.dataset.submitEndpoint;
+ if(!endpoint){validation.textContent="تعذر إرسال الاستجابة: لم يتم ربط الاستبانة بجهة استقبال الردود.";return}
+ const button=document.querySelector("#review");
+ button.disabled=true;validation.textContent="جارٍ الإرسال…";
+ try{
+  const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({answers,strengths:document.querySelector("#strengths").value.trim(),improvements:document.querySelector("#improvements").value.trim()})});
+  if(!response.ok)throw new Error("Submission failed");
+  validation.textContent="";result.classList.add("show");result.scrollIntoView({behavior:"smooth",block:"start"});
+ }catch(error){validation.textContent="تعذر إرسال الاستجابة. يُرجى المحاولة لاحقًا."}
+ finally{button.disabled=false}
+});
 </script>
 <script src="../course-global-menu.js" defer></script>
 </body></html>
