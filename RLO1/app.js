@@ -52,7 +52,7 @@ function statusLabel(i){return state.done[i-1]?'مكتملة':state.visited[i-1]
 function updateNav(){const nav=$('#screenNav');nav.innerHTML=screens.map((title,i)=>`<button type="button" class="nav-item ${current===i+1?'active':''} ${state.done[i]?'complete':''}" data-goto="${i+1}" ${current===i+1?'aria-current="step"':''} aria-label="الشاشة ${i+1}: ${title}، ${statusLabel(i+1)}"><span class="nav-index">${arNum(i+1).padStart(2,'٠')}</span><span class="nav-name">${title}</span><span class="nav-status" aria-hidden="true">${state.done[i]?'✓':state.visited[i]?'•':'○'}</span></button>`).join('');
  $$('[data-goto]',nav).forEach(btn=>btn.addEventListener('click',()=>navigate(+btn.dataset.goto)));
  const count=state.done.filter(Boolean).length;$('#progressNumber').textContent=`${arNum(Math.round(count/8*100))}٪`;$('#progressBar').style.width=(count/8*100)+'%';$('#progressHint').textContent=`${arNum(count)} شاشات مكتملة من ${arNum(8)}؛ الزيارة لا تعني الإتقان`;
- $('#currentStatus').textContent=statusLabel(current);$('#screenPosition').textContent=`الشاشة ${arNum(current)} من ${arNum(8)}`;
+ $('#currentStatus').textContent=state.done.filter(Boolean).length===8?'مكتمل':'قيد التعلم';$('#screenPosition').textContent=`الشاشة ${arNum(current)} من ${arNum(8)}`;
  $('#prevScreen').disabled=current===1;$('#nextScreen').disabled=current===8;$('#nextScreen').textContent=current===8?'نهاية الوحدة':'التالي ←';
 }
 function markDone(i){if(!state.done[i-1]){state.done[i-1]=true;store();updateNav();announce(`أكملتِ الشاشة ${arNum(i)}. أحسنتِ.`)}}
