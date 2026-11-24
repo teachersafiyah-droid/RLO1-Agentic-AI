@@ -18,3 +18,14 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.screen{animation:none}.feature-inner,.nav-item,.primary-btn,.sidebar,.progress-fill{transition:none!important}}
 
 .case-card.touch-dragging{border-color:#18a1ad;background:#edf9fc}.touch-ghost{position:fixed;z-index:99;pointer-events:none;max-width:190px;border-radius:13px;background:#063e59;color:white;padding:10px 13px;font-size:12px;box-shadow:0 10px 30px #0b2a4177;opacity:.95;transform:translate(-50%,-50%)}
+
+/* RLO1: three introductory cards only */
+.rlo1-intro-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:24px 0 32px;align-items:stretch}
+.rlo1-intro-card{background:#fff;border:1px solid #d9e7ec;border-radius:17px;padding:25px;min-width:0;box-shadow:0 8px 23px #153d5908}
+.rlo1-intro-tag{display:inline-block;border-radius:100px;background:#e8f8fa;color:#108399;font-size:12px;font-weight:700;padding:6px 12px}
+.rlo1-intro-card h3{font-size:clamp(18px,2vw,25px);line-height:1.5;color:#102f46;margin:15px 0}
+.rlo1-intro-card p,.rlo1-intro-card li{font-size:14px;line-height:1.85;color:#536f80}
+.rlo1-intro-card p{margin:10px 0 0}
+.rlo1-intro-card ol{padding-inline-start:0;padding-inline-end:20px;margin:10px 0 0}
+@media(max-width:1000px){.rlo1-intro-cards{grid-template-columns:1fr}}
+@media(max-width:650px){.rlo1-intro-card{padding:20px}}
