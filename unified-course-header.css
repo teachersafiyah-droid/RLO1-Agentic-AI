@@ -1,0 +1,92 @@
+/* Unified appearance for the existing top strips only. No content or navigation changes. */
+body.course-header-unified .topbar,
+body.course-header-unified .workspace > .top,
+body.course-header-unified .shell > .top {
+  min-height:74px;
+  height:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:13px clamp(18px,3.5vw,52px);
+  background:#f9fcfd;
+  color:#47697c;
+  border-bottom:1px solid #d7e7ec;
+  font-size:12px;
+  box-shadow:none;
+}
+body.course-header-unified .topbar .course-eyebrow,
+body.course-header-unified .topbar .tagline,
+body.course-header-unified .top > b {
+  font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+  font-size:13px;
+  font-weight:700;
+  color:#47697c;
+}
+body.course-header-unified .topbar .top-left,
+body.course-header-unified .topbar .top-right {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+}
+body.course-header-unified .top .pill,
+body.course-header-unified .topbar .pill,
+body.course-header-unified .topbar .duration-chip,
+body.course-header-unified .top .duration-chip,
+body.course-header-unified .header-top .duration-chip {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#fff;
+  color:#396275 !important;
+  font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;
+  font-size:12px;
+  font-weight:600;
+  line-height:1.7;
+  border:1px solid #cbdfe6;
+  border-radius:100px;
+  padding:6px 13px;
+  white-space:nowrap;
+}
+body.course-header-unified .topbar .status-chip {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#e1f6ed;
+  color:#12775b;
+  font-size:12px;
+  font-weight:600;
+  border:1px solid #c2e8d5;
+  border-radius:100px;
+  padding:6px 13px;
+  white-space:nowrap;
+}
+body.course-header-unified .header-top {
+  min-height:74px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  background:#f9fcfd;
+  color:#47697c;
+  border:1px solid #d7e7ec;
+  border-radius:12px;
+  padding:13px 20px;
+  font-size:13px;
+}
+body.course-header-unified .header-top .eyebrow {color:#47697c}
+body.course-header-unified .header-top a {color:#396275;border-color:#cbdfe6}
+@media(max-width:650px){
+  body.course-header-unified .topbar,
+  body.course-header-unified .workspace > .top,
+  body.course-header-unified .shell > .top {min-height:66px;padding:12px 16px;gap:8px}
+  body.course-header-unified .top .pill,
+  body.course-header-unified .topbar .pill,
+  body.course-header-unified .topbar .duration-chip,
+  body.course-header-unified .top .duration-chip,
+  body.course-header-unified .header-top .duration-chip {display:inline-flex;font-size:11px;white-space:normal}
+  body.course-header-unified .header-top{padding:12px 16px;min-height:66px}
+}
