@@ -5,7 +5,7 @@ const $$ = (sel, root=document) => [...root.querySelectorAll(sel)];
 const arNum = n => new Intl.NumberFormat('ar-EG').format(n);
 const key = 'rlo1-agentic-ai-progress-v1';
 const screens = [
-  'مقدمة وتهيئة','من السؤال إلى المهمة','مفهوم الوكيل وخصائصه','آلية عمل الوكيل',
+  'البداية','من السؤال إلى المهمة','مفهوم الوكيل وخصائصه','آلية عمل الوكيل',
   'المحادثة أم الوكيل؟','تطبيقات الوكلاء','تحليل وتصنيف حالات','تقويم ختامي وخلاصة'
 ];
 const stages = [
