@@ -20,7 +20,7 @@ $('#openNav').onclick=()=>{$('#side').classList.add('open');$('#shade').hidden=f
 $('#shade').onclick=closeSide;
 window.addEventListener('hashchange',()=>{const m=location.hash.match(/^#screen-(\d+)$/);if(m)go(+m[1],false)});
 $('#reset').onclick=()=>{if(confirm('إعادة ضبط تقدم الوحدة الرابعة وأنشطتها فقط؟')){localStorage.removeItem(key);location.reload()}};
-$$('[data-done]').forEach(b=>{const n=Number(b.dataset.done);if(state.done.includes(n)){b.textContent='✓ تم تسجيل الاطلاع';b.disabled=true;}b.onclick=()=>{done(n);b.textContent='✓ تم تسجيل الاطلاع';b.disabled=true;}});
+$$('[data-done]').forEach(b=>{const n=Number(b.dataset.done);if(state.done.includes(n)){b.textContent='✓ تم الاطلاع';b.disabled=true;}b.onclick=()=>{done(n);b.textContent='✓ تم الاطلاع';b.disabled=true;}});
 
 const wonder=[
 ['أنفذ المطلوب حتى لو تضررت جودة التعلم.','قد تحافظ هذه الاستجابة على الوقت لكنها تعرّض جودة التعلم للخطر.'],
