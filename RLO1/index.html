@@ -18,7 +18,7 @@
 @media(max-width:600px){.course-switcher{left:10px;bottom:10px;max-width:calc(100vw - 20px)}.course-switcher summary{font-size:12px;padding:9px 12px}.course-switcher .course-menu{max-width:calc(100vw - 20px)}}
 </style>
 <style id="rlo-responsible-styles">.rlo-responsible{margin:26px 0 20px;padding:22px;border-radius:20px;background:#f1f8f8;border:1px solid #bedbdc;box-shadow:0 8px 28px #103b4b0d;color:#163c4b}.rlo-responsible-head{display:flex;align-items:center;gap:14px;background:#087f89;border-right:5px solid #49d5d0;color:white;padding:15px 19px;border-radius:15px;margin-bottom:17px}.rlo-responsible-head>span{font-size:37px}.rlo-responsible-head h2{margin:0 0 4px;color:white;font-size:clamp(17px,2.2vw,23px)}.rlo-responsible-head p{margin:0;color:#def5f4;font-size:13px}.rlo-responsible-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.rlo-responsible-item{background:white;border:1px solid #c6e3e4;border-radius:14px;padding:15px 13px;min-width:0}.rlo-responsible-icon{font-size:25px;display:block;margin-bottom:5px}.rlo-responsible-item strong{display:block;font-size:15px;color:#0c5262}.rlo-responsible-item p{margin:5px 0 0;color:#426573;font-size:13px;line-height:1.7}@media(max-width:800px){.rlo-responsible-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.rlo-responsible{padding:13px}.rlo-responsible-grid{grid-template-columns:1fr}.rlo-responsible-head{padding:12px}}</style>
-<style id="integrated-path-styles">.integrated-path{padding:15px 9px;margin:18px 0 22px;border-top:1px solid #34677a;border-bottom:1px solid #34677a;color:#eefcff;direction:rtl}.integrated-path>strong{display:block;font-size:13px;color:#a1ebea;margin:0 7px 9px}.integrated-path nav{display:grid;gap:4px;margin:0;padding:0;background:transparent}.integrated-path nav a{display:block;text-decoration:none;color:#d9ecf0;background:transparent;border-radius:9px;padding:8px 10px;line-height:1.5;font-size:12px;font-weight:600}.integrated-path nav a:hover,.integrated-path nav a:focus-visible{background:#14586e;color:#fff}.integrated-path nav a[aria-current="page"]{background:#087f89!important;color:#fff;border-right:3px solid #7be3db}</style></head>
+</head>
 <body>
 <a class="skip-link" href="#main">تخطي إلى المحتوى</a>
 <div class="shell">
@@ -34,7 +34,7 @@
   <div class="progress-box"><div class="progress-head"><span>تقدّم التعلّم</span><strong id="progressNumber" aria-live="polite">٠٪</strong></div><div class="progress-track"><div id="progressBar" class="progress-fill"></div></div><small id="progressHint">لا تكتمل الشاشة بمجرد فتحها</small></div>
   <nav id="screenNav" class="screen-nav" aria-label="شاشات الوحدة"></nav>
   <div class="side-bottom"><span class="side-pill">RLO <b>01</b></span><button id="resetProgress" class="plain-button"><span aria-hidden="true">↻</span> إعادة ضبط التقدم</button></div>
- <div class="integrated-path" aria-label="وحدات المسار الخمس"><strong>مسار التعلم · خمس وحدات</strong><nav aria-label="التنقل بين الوحدات والمقدمة"><a href="../" target="_top">المقدمة العامة</a><a href="../course/?unit=1" target="_top" aria-current="page">١ · مفهوم الوكيل</a><a href="../course/?unit=2" target="_top">٢ · المواءمة الوظيفية</a><a href="../course/?unit=3" target="_top">٣ · المقابلات المهنية</a><a href="../course/?unit=4" target="_top">٤ · مواقف العمل</a><a href="../course/?unit=5" target="_top">٥ · بناء الوكيل</a><a href="../survey/" target="_top">استبانة تقييم المسار</a></nav></div></aside>
+ </aside>
  <div class="shade" id="shade" hidden></div>
  <div class="main-column">
   <header class="topbar"><div class="top-right"><button class="icon-button menu-toggle" id="openNav" aria-label="فتح قائمة الشاشات" aria-expanded="false">☰</button><span class="course-eyebrow">وحدات التعلم الرقمية <span> / </span> الوحدة الأولى</span></div><div class="top-left"><span class="duration-chip">◷ ٢٠–٢٥ دقيقة</span><span class="status-chip" id="currentStatus" aria-live="polite">قيد التعلم</span></div></header>
@@ -92,5 +92,7 @@
 <div id="announcer" class="sr-only" role="status" aria-live="polite"></div>
 
 
+
+<details class="course-switcher" aria-label="التنقل الحر بين وحدات المسار"><summary>مسار التعلم — الانتقال بين الوحدات</summary><nav class="course-menu" aria-label="الانتقال بين وحدات المقرر"><a href="../" target="_top">المقدمة</a><a href="../course/?unit=1" aria-current="page" target="_top">الوحدة الأولى: مفهوم الوكيل</a><a href="../course/?unit=2" target="_top">الوحدة الثانية: المواءمة الوظيفية</a><a href="../course/?unit=3" target="_top">الوحدة الثالثة: المقابلات المهنية</a><a href="../course/?unit=4" target="_top">الوحدة الرابعة: مواقف العمل</a><a href="../course/?unit=5" target="_top">الوحدة الخامسة: بناء الوكيل</a><a href="../survey/" target="_top">استبانة تقييم المقرر</a></nav></details>
 </body>
 </html>
