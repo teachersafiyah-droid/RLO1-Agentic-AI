@@ -32,7 +32,7 @@
 
 
 /* Unit 1, screen 6: real AI agent-builder platforms */
-.agent-platforms{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:24px 0 20px}
+.agent-platforms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0 20px}
 .agent-platform{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px;padding:22px 12px 17px;border:1px solid #b9ddeb;border-radius:19px;background:linear-gradient(180deg,#f5fcff 0%,#e9f6fc 100%);color:#0b3858;box-shadow:0 6px 17px #0a506216;cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s;font-family:inherit}
 .agent-platform:hover,.agent-platform:focus-visible{transform:translateY(-3px);border-color:#069eb0;box-shadow:0 8px 20px #0a506228}
 .agent-platform[aria-pressed=true]{background:linear-gradient(180deg,#e4f9fa,#d9f1f7);border:2px solid #079caf;padding:21px 11px 16px}
