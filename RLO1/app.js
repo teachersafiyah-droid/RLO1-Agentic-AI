@@ -27,10 +27,11 @@ const features = [
   {name:'الإشراف البشري', icon:'♙', detail:'تظل القرارات الحساسة والإجراءات الخارجية المهمة خاضعة للمراجعة والموافقة البشرية.', example:'تطلب موافقة نورة قبل إرسال سيرتها الذاتية لأي جهة.'}
 ];
 const apps = {
-  jobs:{title:'وكيل البحث الوظيفي', goal:'جمع فرص مناسبة قابلة للمراجعة.', inputs:'التخصص، المدينة المرغوبة، مستوى الخبرة.', tools:'مصادر وظائف يُسمح بالبحث فيها.', outputs:'قائمة فرص مؤرخة مع روابطها.', risks:'إعلانات غير محدثة، أو منصات تمنع الوصول الآلي.'},
-  match:{title:'وكيل المواءمة الوظيفية', goal:'تحديد توافق المهارات مع شروط وظيفة.', inputs:'ملف مؤهلات مختصر وإعلان وظيفة.', tools:'استخراج النصوص، وتحليل المتطلبات، والمقارنة.', outputs:'جدول أدلة توافق وفجوات مهارات.', risks:'استنتاج مهارة غير مثبتة أو المبالغة في نسبة التوافق.'},
-  interview:{title:'وكيل التدريب على المقابلات', goal:'تدريب الخريجة على تقديم إجابات مهنية.', inputs:'وصف وظيفة ومستوى الخبرة المطلوب.', tools:'محاكاة أسئلة وتغذية راجعة وفق معايير.', outputs:'جلسة تدريب وملاحظات تحسين.', risks:'أسئلة متحيزة، أو ملاحظات تحتاج تحققًا بشريًا.'},
-  learn:{title:'وكيل دعم التعلم والتطوير', goal:'اقتراح خطوات لسد فجوة مهارية.', inputs:'المهارة المستهدفة والوقت والموارد.', tools:'مصادر تعلم متاحة وخطة متابعة.', outputs:'خطة تعلم قابلة للمراجعة ومؤشرات تقدم.', risks:'مصادر قديمة أو خطط لا تراعي ظروف المتعلمة.'}
+  dify:{title:'Dify',type:'منصة لتطوير تطبيقات الذكاء الاصطناعي والوكلاء',features:['بناء الوكلاء وسير العمل باستخدام محرر مرئي.','ربط نماذج الذكاء الاصطناعي بمصادر المعرفة والأدوات.','نشر التطبيقات عبر الويب أو واجهات API.','مشروع مفتوح المصدر مع خيارات استضافة وتشغيل متنوعة.'],best:'لإنشاء وكيل يعتمد على ملفات معرفية أو مسار عمل متعدد الخطوات.',url:'https://dify.ai/'},
+  flowise:{title:'Flowise',type:'أداة مرئية مفتوحة المصدر لبناء الوكلاء',features:['تصميم الوكلاء بتوصيل العقد والعناصر بصريًا.','إعداد تدفقات محادثة وتدفقات متعددة الوكلاء.','الربط مع النماذج والأدوات ومصادر المعرفة.','إمكان التشغيل الذاتي وإتاحة التطبيقات عبر واجهات برمجية.'],best:'لتجربة تصميم الوكلاء بصريًا وفهم تسلسل خطواتهم.',url:'https://flowiseai.com/'},
+  n8n:{title:'n8n',type:'منصة لأتمتة المهام ودمج وكلاء الذكاء الاصطناعي',features:['ربط الوكلاء بخطوات الأتمتة والتطبيقات المختلفة.','إضافة عقد AI Agent إلى سير العمل.','الاستفادة من قوالب جاهزة لتسريع البدء.','إتاحة نسخة مجتمعية للاستضافة الذاتية وفق ترخيصها.'],best:'للمهام التي تتطلب ربط أدوات متعددة وتنفيذ خطوات متتابعة.',url:'https://n8n.io/'},
+  make:{title:'Make',type:'منصة مرئية لربط التطبيقات والوكلاء',features:['بناء الأتمتة والوكلاء ضمن واجهة مرئية.','التكامل مع آلاف التطبيقات والخدمات.','رؤية خطوات السيناريو لمتابعة التنفيذ.','توفر خطة مجانية محدودة وخطط مدفوعة.'],best:'لأتمتة الإجراءات المتكررة التي تتضمن أكثر من تطبيق.',url:'https://www.make.com/'},
+  botpress:{title:'Botpress',type:'منصة لتصميم ونشر وكلاء المحادثة',features:['تصميم منطق المحادثة وسير عمل الوكيل بصريًا.','ربط الوكيل بقواعد المعرفة للبحث عن الإجابات.','التكامل مع أنظمة وخدمات خارجية.','دعم نقل المحادثة إلى موظف بشري عند الحاجة.'],best:'لوكلاء الأسئلة الشائعة وخدمة المستفيدين والدعم.',url:'https://botpress.com/'}
 };
 const cases = [
  {id:'c1', name:'الحالة الأولى', body:'تسأل خريجة أداة محادثة عن مهارات مصمم التعليم؛ فتكتب قائمة عامة دون استخدام ملفات أو أدوات خارجية.', type:'chat', why:'المعطى هو توليد نص فقط، ولا يظهر تنفيذ خطوات خارج المحادثة.'},
@@ -80,9 +81,22 @@ renderOrder();$('#orderCheck').addEventListener('click',()=>{const n=state.order
 $('#orderRetry').addEventListener('click',()=>{let copy=stages.map(s=>s.id);for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}state.order=copy;store();renderOrder();$('#orderFeedback').hidden=true});
 /* Screen 5 */
 $('#compareSubmit').addEventListener('click',()=>{const picked=$$('#compareChoices input:checked').map(c=>c.value);const expected=['tools','steps','verify'];const correct=expected.every(x=>picked.includes(x))&&picked.length===3;if(correct){showFeedback('compareFeedback','','تحليل دقيق','الميزة ليست اسم الأداة: الأدلة هي الوصول إلى أدوات ملائمة، وتتابع الإجراءات، والمقارنة المستندة إلى البيانات، مع الإفصاح عن القيود.');state.comparisonPassed=true;store();markDone(5)}else{showFeedback('compareFeedback','warn','ما زالت بعض الأدلة تحتاج مراجعة','لا يعد اسم العلامة التجارية دليلًا. ابحثي عن قدرة فعلية مثبتة على الوصول إلى مصادر واتباع خطوات ومراجعة النتائج.')}});
-/* Screen 6 */
-function showApp(id){const a=apps[id];if(!a)return;if(!state.appsSeen.includes(id))state.appsSeen.push(id);store();$$('.hotspot').forEach(el=>el.setAttribute('aria-pressed',el.dataset.app===id?'true':'false'));$('#applicationDetail').innerHTML=`<span class="mini-label">تطبيق مهني استكشافي</span><h2>${a.title}</h2><dl><div><dt>الهدف</dt><dd>${a.goal}</dd></div><div><dt>المدخلات</dt><dd>${a.inputs}</dd></div><div><dt>الأدوات</dt><dd>${a.tools}</dd></div><div><dt>المخرجات</dt><dd>${a.outputs}</dd></div><div><dt>الحدود والمخاطر</dt><dd>${a.risks}</dd></div></dl><div class="application-foot"><span>${arNum(state.appsSeen.length)} من ${arNum(4)}</span> تطبيقات تم استكشافها</div>`;if(state.appsSeen.length===4){showFeedback('appsFeedback','','اكتمل استكشاف التطبيقات','لكل وكيل هدف ومدخلات وأدوات ومخرجات، لكن يجب فهم القيود قبل الاعتماد على نتائجه.');markDone(6)}}
-$$('.hotspot').forEach(btn=>btn.addEventListener('click',()=>showApp(btn.dataset.app)));
+/* Screen 6: explore five real agent-building platforms */
+function showApp(id){
+ const a=apps[id];if(!a)return;
+ if(!state.appsSeen.includes(id))state.appsSeen.push(id);
+ store();
+ $$('.agent-platform').forEach(el=>el.setAttribute('aria-pressed',el.dataset.app===id?'true':'false'));
+ const features=a.features.map(f=>'<li>'+f+'</li>').join('');
+ $('#applicationDetail').innerHTML=`<span class="mini-label">منصة حقيقية لبناء الوكلاء</span><h2 dir="ltr">${a.title}</h2><p>${a.type}</p><h3>أبرز المميزات</h3><ul class="agent-feature-list">${features}</ul><p class="agent-platform-best"><strong>مناسبة لـ:</strong> ${a.best}</p><a class="agent-platform-link" href="${a.url}" target="_blank" rel="noopener noreferrer" aria-label="زيارة موقع ${a.title} الرسمي في علامة تبويب جديدة">زيارة الموقع الرسمي ↗</a><div class="application-foot"><span>${arNum(state.appsSeen.filter(id=>id in apps).length)} من ٥</span> منصات تم استكشافها</div>`;
+ if(state.appsSeen.filter(id=>id in apps).length===5){
+  showFeedback('appsFeedback','','اكتمل استكشاف المنصات','تعرفتِ على خمس منصات لبناء وكلاء الذكاء الاصطناعي. يختلف اختيار المنصة حسب الهدف والتكاملات والمهارات والتكلفة.');
+  markDone(6);
+ }
+}
+$$('.agent-platform').forEach(btn=>btn.addEventListener('click',()=>showApp(btn.dataset.app)));
+/* Restore previously completed platform exploration without resetting other progress */
+if(state.appsSeen.filter(id=>id in apps).length===5)markDone(6);
 /* Screen 7: mouse, touch, and keyboard-accessible classification */
 
 let touchGhost=null, touchCardId=null;
