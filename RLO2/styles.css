@@ -40,3 +40,12 @@ main{min-height:70vh}.screen{padding:0 0 50px}.content-wrap{max-width:1020px;mar
 
 /* RLO2 layout fix: the inherited RLO1 offset duplicates the sidebar spacing. */
 @media(max-width:800px){.main-column{width:100%;margin-right:0}}
+
+/* Introduction cards: match the three-card presentation of RLO3 (screen 1 only). */
+.rlo2-intro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:20px}
+.rlo2-intro-panel{background:#fff;border:1px solid #d9e7ec;border-radius:17px;padding:25px;min-width:0;box-shadow:0 8px 23px #153d5908}
+.rlo2-intro-tag{display:inline-block;padding:6px 12px;border-radius:100px;background:#e8f8fa;color:#108399;font-size:11px;font-weight:700}
+.rlo2-intro-panel h2{font-size:clamp(19px,2vw,26px);line-height:1.5;color:#102f46;margin:15px 0}
+.rlo2-intro-panel p{font-size:15px;line-height:1.85;color:#536f80;margin:12px 0 0}
+@media(max-width:1000px){.rlo2-intro-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.rlo2-intro-panel{padding:20px}}
