@@ -8,7 +8,7 @@
 </style></head><body><a href="#content" class="skip">تخطي التنقل إلى محتوى الوحدة</a><main id="content" class="player"><iframe id="lesson" title="محتوى الوحدة التعليمية" src="../RLO1/" loading="eager" allow="fullscreen" referrerpolicy="same-origin"></iframe></main>
 <script>
 (()=>{'use strict';
-const pages=['../RLO1/','../RLO2/index.html?v=cards-20261124-1840','../RLO3/','../RLO4/index.html?v=unit-description-20261124','../RLO5/index.html?v=usage-instructions-20261124-2'];const frame=document.getElementById('lesson');let current=0;
+const pages=['../RLO1/index.html?v=intro-three-cards-20261124','../RLO2/index.html?v=cards-20261124-1840','../RLO3/','../RLO4/index.html?v=unit-description-20261124','../RLO5/index.html?v=usage-instructions-20261124-2'];const frame=document.getElementById('lesson');let current=0;
 function validUnit(){const raw=new URLSearchParams(location.search).get('unit');const n=Number(raw);return Number.isInteger(n)&&n>=1&&n<=5?n:1}
 function render(n,load=true,push=false){current=n-1;if(load)frame.src=pages[current];if(push)history.pushState({unit:n},'', '?unit='+n);else history.replaceState({unit:n},'', '?unit='+n)}
 
