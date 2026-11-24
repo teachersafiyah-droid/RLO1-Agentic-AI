@@ -38,7 +38,7 @@
 .agent-platform[aria-pressed=true]{background:linear-gradient(180deg,#e4f9fa,#d9f1f7);border:2px solid #079caf;padding:21px 11px 16px}
 .agent-platform-icon{width:66px;height:66px;border-radius:20px;background:linear-gradient(145deg,#0865ad,#10c5c6);color:white;font-size:35px;line-height:66px;font-weight:900;box-shadow:0 6px 15px #075e9d33}
 .agent-platform strong{font:800 23px Arial,sans-serif;direction:ltr}
-.agent-platform small{font:700 12px/1.8 inherit;min-height:44px;color:#4e7182}
+.agent-platform small{font-size:12px;font-weight:700;line-height:1.8;min-height:44px;color:#4e7182}
 .agent-platform-action{margin-top:auto;border-radius:999px;background:#0b609d;color:white;font-weight:700;font-size:11px;padding:9px 11px}
 .agent-platform-detail{background:white;border:1px solid #cee7ed;border-radius:19px;padding:24px 30px;box-shadow:var(--shadow)}
 .agent-platform-detail h2{margin:8px 0;font:800 29px Arial,sans-serif;color:#103b60;text-align:right}
