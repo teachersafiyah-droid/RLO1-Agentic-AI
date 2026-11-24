@@ -126,10 +126,10 @@ if(state.videoChoice){const e=$(`input[name="videoChoice"][value="${state.videoC
 const introAck=$('#unitIntroAcknowledge');
 function renderIntroAck(){
  if(!introAck)return;
- if(state.done[0]){introAck.textContent='✓ اطلعت على وصف الوحدة ونتائج تعلمها';introAck.disabled=true}
+ if(state.done[0]){introAck.textContent='✓ اطلعت على وصف الوحدة ونتائج تعلمها';introAck.disabled=false}
  else {introAck.textContent='اطلعت على وصف الوحدة ونتائج تعلمها';introAck.disabled=false}
 }
-if(introAck)introAck.addEventListener('click',()=>{markDone(1);renderIntroAck()});
+if(introAck)introAck.addEventListener('click',()=>{markDone(1);renderIntroAck();announce('تم تسجيل الاطلاع على وصف الوحدة ونتائج تعلمها')});
 renderIntroAck();
 /* Startup */
 goFromHash();
