@@ -52,7 +52,7 @@ const rules=$$('#rules details');rules.forEach((detail,i)=>detail.addEventListen
 function updateReady(){const checkbox=$('#readyCheckbox');checkbox.checked=!!data.ready;const completeRules=data.rules.length===8;checkbox.disabled=!completeRules;const active=completeRules&&data.ready;$('#launchLink').classList.toggle('disabled',!active);$('#launchLink').setAttribute('aria-disabled',String(!active));$('#launchLink').tabIndex=active?0:-1;$('#readyHint').textContent=completeRules?'يمكنك تأكيد الاستعداد ثم بدء الوحدة الأولى.':`استكشفي الإرشادات الثمانية أولًا (${digits(data.rules.length)} من ٨).`}
 $('#readyCheckbox').addEventListener('change',e=>{data.ready=!!e.target.checked;save();updateReady();progress()});
 $('#launchLink').addEventListener('click',e=>{if($('#launchLink').getAttribute('aria-disabled')==='true')e.preventDefault()});
-$('#coverStart').addEventListener('click',()=>{data.coverStarted=true;save();progress();location.hash='intro';});
+['#coverStart','#coverNext'].forEach(sel=>$(sel).addEventListener('click',()=>{data.coverStarted=true;save();progress();location.hash='intro';}));
 const video=$('#introVideo'),placeholder=$('#videoPlaceholder');
 function videoState(){placeholder.hidden=false;video.hidden=true;}
 video.addEventListener('loadedmetadata',()=>{if(video.videoWidth>0){placeholder.hidden=true;video.hidden=false}});
