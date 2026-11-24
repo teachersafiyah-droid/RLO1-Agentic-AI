@@ -127,16 +127,16 @@ const introAck=$('#unitIntroAcknowledge');
 function renderIntroAck(){
  if(!introAck)return;
  introAck.disabled=false;
- introAck.textContent=state.done[0]?'✓ اطلعت على وصف الوحدة ونتائج تعلمها':'اطلعت على وصف الوحدة ونتائج تعلمها';
+ introAck.textContent=state.done[0]?'✓ تم الاطلاع':'اطلعت على وصف الوحدة ونتائج تعلمها';
  introAck.setAttribute('aria-pressed',state.done[0]?'true':'false');
 }
 if(introAck)introAck.addEventListener('click',()=>{
  state.done[0]=true;
  store();
  updateNav();
- introAck.textContent='✓ تم تسجيل الاطلاع على وصف الوحدة ونتائج تعلمها';
+ introAck.textContent='✓ تم الاطلاع';
  introAck.setAttribute('aria-pressed','true');
- announce('تم تسجيل الاطلاع على وصف الوحدة ونتائج تعلمها');
+ announce('تم الاطلاع');
 });
 renderIntroAck();
 /* Startup */
