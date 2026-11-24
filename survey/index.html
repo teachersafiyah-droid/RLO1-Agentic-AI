@@ -33,6 +33,14 @@ button.primary,.secondary{padding:12px 20px;border:0;border-radius:12px;font-wei
 footer{color:#5d7b8b;font-size:12px;text-align:center;padding:20px}
 @media(max-width:650px){.panel{padding:19px}.scale{grid-template-columns:1fr;gap:6px}.scale label{min-height:41px;justify-content:flex-start;padding:8px 12px}.progress-card{flex-direction:column;align-items:stretch}progress{width:100%}}
 </style>
+<style id="course-navigation-styles">
+.course-switcher{position:fixed;left:18px;bottom:18px;z-index:2000;direction:rtl;font-family:"IBM Plex Sans Arabic",Tahoma,Arial,sans-serif;color:#f6fdff;max-width:calc(100vw - 36px)}
+.course-switcher summary{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none;background:#083554;color:white;padding:12px 17px;border:1px solid #40bfcb;border-radius:14px;font-size:14px;font-weight:700;box-shadow:0 8px 28px #031c2f55;min-height:44px}
+.course-switcher summary::-webkit-details-marker{display:none}.course-switcher summary::before{content:"☰";color:#78e2e0;font-size:18px}.course-switcher[open] summary{border-radius:0 0 14px 14px}
+.course-switcher .course-menu{background:#071f35;padding:10px;border:1px solid #40bfcb;border-radius:14px 14px 0 0;box-shadow:0 -10px 32px #031c2f55;display:grid;gap:4px;max-height:min(62vh,450px);overflow:auto}
+.course-switcher[open]{display:flex;flex-direction:column-reverse}.course-switcher .course-menu a,.course-switcher .course-menu span{display:block;font-size:13px;line-height:1.7;padding:9px 11px;border-radius:8px;text-decoration:none;color:#f6fdff;white-space:normal}.course-switcher .course-menu a:hover{background:#15516d}.course-switcher .course-menu a[aria-current="page"]{background:#0d6276;color:white;font-weight:700}.course-switcher .course-menu span{color:#a9b8c4}.course-switcher a:focus-visible,.course-switcher summary:focus-visible{outline:3px solid #e8be68;outline-offset:3px}
+@media(max-width:600px){.course-switcher{left:10px;bottom:10px;max-width:calc(100vw - 20px)}.course-switcher summary{font-size:12px;padding:9px 12px}.course-switcher .course-menu{max-width:calc(100vw - 20px)}}
+</style>
 </head>
 <body>
 <a href="#main" class="skip">تخطي إلى الاستبانة</a>
@@ -83,4 +91,5 @@ form.addEventListener("change",update);
 document.querySelector("#review").addEventListener("click",()=>{const answers=[...Array(18)].map((_,i)=>form.querySelector('input[name="q'+(i+1)+'"]:checked')?.value??null);const missing=answers.findIndex(x=>x===null);if(missing>=0){validation.textContent="يرجى الإجابة عن العبارة رقم "+(missing+1)+" أولًا.";form.querySelector('input[name="q'+(missing+1)+'"]').closest("fieldset").scrollIntoView({behavior:"smooth",block:"center"});return}validation.textContent="";const names=Object.keys(domains);let html="<p><strong>ملخص تجريبي لإجاباتك:</strong></p><ul>";names.forEach((key,i)=>{const list=answers.slice(i*3,i*3+3).map(Number),avg=(list.reduce((a,b)=>a+b,0)/3).toFixed(2);const display={content:"المحتوى التعليمي",usability:"سهولة الاستخدام",interaction:"التفاعل",media:"الوسائط",career:"الفائدة المهنية",satisfaction:"الرضا العام"}[key];html+="<li>"+display+": "+avg+" من 5</li>"});html+="</ul><p><strong>لم تُرسل هذه النتائج أو تُحفَظ في قاعدة بيانات.</strong></p>";document.querySelector("#summary").innerHTML=html;result.classList.add("show");result.scrollIntoView({behavior:"smooth",block:"start"})});
 form.addEventListener("reset",()=>{setTimeout(()=>{validation.textContent="";update();},0)});
 </script>
+<details class="course-switcher" aria-label="التنقل الحر بين وحدات المسار"><summary>مسار التعلم — الانتقال بين الوحدات</summary><nav class="course-menu" aria-label="الانتقال بين وحدات المقرر"><a href="../">المقدمة</a><a href="../course/?unit=1">الوحدة الأولى: مفهوم الوكيل</a><a href="../course/?unit=2">الوحدة الثانية: المواءمة الوظيفية</a><a href="../course/?unit=3">الوحدة الثالثة: المقابلات المهنية</a><a href="../course/?unit=4">الوحدة الرابعة: مواقف العمل</a><a href="../course/?unit=5">الوحدة الخامسة: بناء الوكيل</a><a href="./" aria-current="page">استبانة تقييم المقرر</a></nav></details>
 </body></html>
