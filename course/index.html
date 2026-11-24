@@ -16,4 +16,5 @@ window.addEventListener('popstate',()=>render(validUnit()));
 frame.addEventListener('load',()=>{try{const url=frame.contentWindow.location.href;for(let i=0;i<5;i++){if(url.includes('/RLO'+(i+1)+'/')){if(i!==current)render(i+1,false,false);break}}}catch(e){}});
 render(validUnit());
 })();
-</script></body></html>
+</script><script src="../course-global-menu.js" defer></script>
+</body></html>
