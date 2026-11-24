@@ -31,7 +31,8 @@ const apps = {
   flowise:{title:'Flowise',type:'أداة مرئية مفتوحة المصدر لبناء الوكلاء',features:['تصميم الوكلاء بتوصيل العقد والعناصر بصريًا.','إعداد تدفقات محادثة وتدفقات متعددة الوكلاء.','الربط مع النماذج والأدوات ومصادر المعرفة.','إمكان التشغيل الذاتي وإتاحة التطبيقات عبر واجهات برمجية.'],best:'لتجربة تصميم الوكلاء بصريًا وفهم تسلسل خطواتهم.',url:'https://flowiseai.com/'},
   n8n:{title:'n8n',type:'منصة لأتمتة المهام ودمج وكلاء الذكاء الاصطناعي',features:['ربط الوكلاء بخطوات الأتمتة والتطبيقات المختلفة.','إضافة عقد AI Agent إلى سير العمل.','الاستفادة من قوالب جاهزة لتسريع البدء.','إتاحة نسخة مجتمعية للاستضافة الذاتية وفق ترخيصها.'],best:'للمهام التي تتطلب ربط أدوات متعددة وتنفيذ خطوات متتابعة.',url:'https://n8n.io/'},
   make:{title:'Make',type:'منصة مرئية لربط التطبيقات والوكلاء',features:['بناء الأتمتة والوكلاء ضمن واجهة مرئية.','التكامل مع آلاف التطبيقات والخدمات.','رؤية خطوات السيناريو لمتابعة التنفيذ.','توفر خطة مجانية محدودة وخطط مدفوعة.'],best:'لأتمتة الإجراءات المتكررة التي تتضمن أكثر من تطبيق.',url:'https://www.make.com/'},
-  botpress:{title:'Botpress',type:'منصة لتصميم ونشر وكلاء المحادثة',features:['تصميم منطق المحادثة وسير عمل الوكيل بصريًا.','ربط الوكيل بقواعد المعرفة للبحث عن الإجابات.','التكامل مع أنظمة وخدمات خارجية.','دعم نقل المحادثة إلى موظف بشري عند الحاجة.'],best:'لوكلاء الأسئلة الشائعة وخدمة المستفيدين والدعم.',url:'https://botpress.com/'}
+  botpress:{title:'Botpress',type:'منصة لتصميم ونشر وكلاء المحادثة',features:['تصميم منطق المحادثة وسير عمل الوكيل بصريًا.','ربط الوكيل بقواعد المعرفة للبحث عن الإجابات.','التكامل مع أنظمة وخدمات خارجية.','دعم نقل المحادثة إلى موظف بشري عند الحاجة.'],best:'لوكلاء الأسئلة الشائعة وخدمة المستفيدين والدعم.',url:'https://botpress.com/'},
+  claude:{title:'Claude Code',type:'وكيل برمجي من Anthropic يساعد على بناء وتطوير التطبيقات والوكلاء',features:['يفهم ملفات المشروع ويعدّل الشيفرة البرمجية بناءً على التعليمات.','يساعد في إنشاء التطبيقات والوظائف البرمجية واختبارها.','يمكن استخدامه عبر بيئات التطوير والطرفية والويب وفق الإتاحة.','يدعم العمل على مشروعات متعددة الملفات، مع مراجعة المستخدم للتغييرات والصلاحيات.'],best:'لتطوير وكيل ذكي أو موقع تفاعلي باستخدام الشيفرة، مثل التطبيق العملي في المقرر.',url:'https://code.claude.com/docs/en/overview'}
 };
 const cases = [
  {id:'c1', name:'الحالة الأولى', body:'تسأل خريجة أداة محادثة عن مهارات مصمم التعليم؛ فتكتب قائمة عامة دون استخدام ملفات أو أدوات خارجية.', type:'chat', why:'المعطى هو توليد نص فقط، ولا يظهر تنفيذ خطوات خارج المحادثة.'},
@@ -81,22 +82,22 @@ renderOrder();$('#orderCheck').addEventListener('click',()=>{const n=state.order
 $('#orderRetry').addEventListener('click',()=>{let copy=stages.map(s=>s.id);for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}state.order=copy;store();renderOrder();$('#orderFeedback').hidden=true});
 /* Screen 5 */
 $('#compareSubmit').addEventListener('click',()=>{const picked=$$('#compareChoices input:checked').map(c=>c.value);const expected=['tools','steps','verify'];const correct=expected.every(x=>picked.includes(x))&&picked.length===3;if(correct){showFeedback('compareFeedback','','تحليل دقيق','الميزة ليست اسم الأداة: الأدلة هي الوصول إلى أدوات ملائمة، وتتابع الإجراءات، والمقارنة المستندة إلى البيانات، مع الإفصاح عن القيود.');state.comparisonPassed=true;store();markDone(5)}else{showFeedback('compareFeedback','warn','ما زالت بعض الأدلة تحتاج مراجعة','لا يعد اسم العلامة التجارية دليلًا. ابحثي عن قدرة فعلية مثبتة على الوصول إلى مصادر واتباع خطوات ومراجعة النتائج.')}});
-/* Screen 6: explore five real agent-building platforms */
+/* Screen 6: explore six real agent-building platforms */
 function showApp(id){
  const a=apps[id];if(!a)return;
  if(!state.appsSeen.includes(id))state.appsSeen.push(id);
  store();
  $$('.agent-platform').forEach(el=>el.setAttribute('aria-pressed',el.dataset.app===id?'true':'false'));
  const features=a.features.map(f=>'<li>'+f+'</li>').join('');
- $('#applicationDetail').innerHTML=`<span class="mini-label">منصة حقيقية لبناء الوكلاء</span><h2 dir="ltr">${a.title}</h2><p>${a.type}</p><h3>أبرز المميزات</h3><ul class="agent-feature-list">${features}</ul><p class="agent-platform-best"><strong>مناسبة لـ:</strong> ${a.best}</p><a class="agent-platform-link" href="${a.url}" target="_blank" rel="noopener noreferrer" aria-label="زيارة موقع ${a.title} الرسمي في علامة تبويب جديدة">زيارة الموقع الرسمي ↗</a><div class="application-foot"><span>${arNum(state.appsSeen.filter(id=>id in apps).length)} من ٥</span> منصات تم استكشافها</div>`;
- if(state.appsSeen.filter(id=>id in apps).length===5){
-  showFeedback('appsFeedback','','اكتمل استكشاف المنصات','تعرفتِ على خمس منصات لبناء وكلاء الذكاء الاصطناعي. يختلف اختيار المنصة حسب الهدف والتكاملات والمهارات والتكلفة.');
+ $('#applicationDetail').innerHTML=`<span class="mini-label">منصة حقيقية لبناء الوكلاء</span><h2 dir="ltr">${a.title}</h2><p>${a.type}</p><h3>أبرز المميزات</h3><ul class="agent-feature-list">${features}</ul><p class="agent-platform-best"><strong>مناسبة لـ:</strong> ${a.best}</p><a class="agent-platform-link" href="${a.url}" target="_blank" rel="noopener noreferrer" aria-label="زيارة موقع ${a.title} الرسمي في علامة تبويب جديدة">زيارة الموقع الرسمي ↗</a><div class="application-foot"><span>${arNum(state.appsSeen.filter(id=>id in apps).length)} من ٦</span> منصات تم استكشافها</div>`;
+ if(state.appsSeen.filter(id=>id in apps).length===6){
+  showFeedback('appsFeedback','','اكتمل استكشاف المنصات','تعرفتِ على ست منصات لبناء وكلاء الذكاء الاصطناعي. يختلف اختيار المنصة حسب الهدف والتكاملات والمهارات والتكلفة.');
   markDone(6);
  }
 }
 $$('.agent-platform').forEach(btn=>btn.addEventListener('click',()=>showApp(btn.dataset.app)));
 /* Restore previously completed platform exploration without resetting other progress */
-if(state.appsSeen.filter(id=>id in apps).length===5)markDone(6);
+if(state.appsSeen.filter(id=>id in apps).length===6)markDone(6);
 /* Screen 7: mouse, touch, and keyboard-accessible classification */
 
 let touchGhost=null, touchCardId=null;
